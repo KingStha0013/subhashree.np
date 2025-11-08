@@ -12,7 +12,7 @@
     
     <style>
         /* =================================================================
-           1. PROFESSIONAL & ANIMATED MOBILE-FIRST CSS (FIXED & ENHANCED)
+           1. PROFESSIONAL & ANIMATED MOBILE-FIRST CSS (UI POLISH)
            ================================================================= */
         :root {
             --primary-color: #5E5DF0;
@@ -32,11 +32,18 @@
         html { scroll-behavior: smooth; }
         body { font-family: var(--font-family); background-color: var(--background-color); color: var(--text-color); line-height: 1.6; -webkit-font-smoothing: antialiased; }
 
-        /* --- Login View --- */
+        /* --- Login View (UI Polish) --- */
         #login-view { display: flex; justify-content: center; align-items: center; height: 100vh; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); }
         #login-box { width: 100%; max-width: 420px; padding: 3rem; background: var(--surface-color); border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); text-align: center; }
-        #login-box h2 { font-size: 2rem; font-weight: 700; color: var(--primary-color); margin-bottom: 0.5rem; }
-        #login-box p { color: var(--subtle-text-color); margin-bottom: 2rem; }
+        #login-box h2 { font-size: 2.2rem; font-weight: 700; color: var(--primary-color); margin-bottom: 0.5rem; }
+        #login-box p { color: var(--subtle-text-color); margin-bottom: 2.5rem; }
+        .form-group { position: relative; margin-bottom: 1.5rem; }
+        .form-group i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--subtle-text-color); }
+        .form-control { padding: 0.85rem 0.85rem 0.85rem 40px; border: 1px solid var(--border-color); border-radius: 8px; width: 100%; transition: border-color 0.3s, box-shadow 0.3s; font-size: 1rem; }
+        .form-control:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(94, 93, 240, 0.2); }
+        .btn { padding: 0.8rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; text-decoration: none; display: inline-flex; justify-content: center; align-items: center; gap: 0.5rem; transition: all 0.3s; font-size: 1rem; width: 100%; }
+        .btn:active { transform: scale(0.97); }
+        .btn-primary { background-color: var(--primary-color); color: white; box-shadow: 0 4px 6px rgba(94, 93, 240, 0.2); }
 
         /* --- Store View (Animated Entry) --- */
         #store-view { display: none; animation: fadeIn 0.8s ease-in-out; }
@@ -79,18 +86,12 @@
             .desktop-nav-links { display: flex; gap: 2rem; list-style: none; }
             .desktop-nav-links a { text-decoration: none; color: var(--text-color); font-weight: 500; transition: color 0.3s; position: relative; padding-bottom: 5px; }
             .desktop-nav-links a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background-color: var(--primary-color); transition: width 0.3s ease; }
-            .desktop-nav-links a:hover::after, .desktop-nav-links a.active::after { width: 100%; }
-            .desktop-nav-links a:hover, .desktop-nav-links a.active { color: var(--primary-color); }
-            main { padding-bottom: 2.5rem; }
-            #cart-page-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; align-items: flex-start; }
-            #cart-summary { position: sticky; top: 100px; }
         }
 
         /* --- Product Grid & On-Scroll Animation (SMALLER CARDS) --- */
         .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
         .product-card { background-color: var(--surface-color); border-radius: 12px; box-shadow: var(--shadow); overflow: hidden; display: flex; flex-direction: column; transition: transform 0.3s, box-shadow 0.3s; opacity: 0; transform: translateY(30px); cursor: pointer; }
         .product-card.animate { animation: slideUp 0.6s forwards; }
-        .product-card:hover { transform: translateY(-5px) !important; box-shadow: var(--shadow-hover); }
         @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
         .product-card-img { width: 100%; height: 160px; object-fit: cover; }
         .product-card-body { padding: 0.8rem; flex-grow: 1; display: flex; flex-direction: column; }
@@ -106,7 +107,6 @@
         .skeleton-body { padding: 0.8rem; }
         .skeleton-text { height: 18px; margin-bottom: 8px; border-radius: 4px; }
         .shimmer { position: relative; overflow: hidden; background-color: #e0e0e0; }
-        .shimmer::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); animation: shimmer 1.5s infinite; }
         @keyframes shimmer { 100% { left: 100%; } }
 
         /* --- Search Overlay --- */
@@ -124,12 +124,12 @@
         #profile-email { font-size: 1.2rem; font-weight: 500; word-break: break-all; }
         .profile-actions { display: flex; flex-direction: column; gap: 1rem; }
         .profile-link { display: flex; align-items: center; padding: 1rem; background: var(--background-color); border-radius: 8px; text-decoration: none; color: var(--text-color); font-weight: 500; transition: background-color 0.3s; }
-        .profile-link:hover { background-color: #e9ecef; }
         .profile-link i:first-child { margin-right: 1rem; color: var(--primary-color); width: 20px; text-align: center; }
         .profile-link span { flex-grow: 1; }
         #profile-logout-btn { width: 100%; justify-content: center; background-color: var(--danger-color); }
 
-        /* --- Cart Page Specifics --- */
+        /* --- Cart Page Specifics (UI Polish) --- */
+        .page-header { font-size: 2rem; font-weight: 700; margin-bottom: 2rem; }
         .cart-item { background: var(--surface-color); border-radius: 12px; padding: 1rem; box-shadow: var(--shadow); display: flex; align-items: center; gap: 1rem; }
         .cart-item-img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; }
         .cart-item-details { flex-grow: 1; }
@@ -138,12 +138,12 @@
         .quantity-btn { background: var(--border-color); color: var(--text-color); border: none; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-weight: bold; }
         .remove-item-btn { background: none; border: none; color: var(--subtle-text-color); cursor: pointer; font-size: 1.1rem; }
         #cart-summary { background: var(--surface-color); border-radius: 12px; padding: 1.5rem; box-shadow: var(--shadow); }
+        #cart-summary h3 { font-size: 1.2rem; font-weight: 600; margin-bottom: 1rem; }
         .summary-row { display: flex; justify-content: space-between; margin-bottom: 1rem; }
         .summary-row span:last-child { font-weight: 600; }
         #checkout-btn { width: 100%; margin-top: 1rem; }
 
         /* --- General UI & Helpers --- */
-        .page-header { font-size: 1.8rem; margin-bottom: 1.5rem; }
         .empty-state { text-align: center; padding: 4rem 2rem; background: var(--surface-color); border-radius: 12px; }
         .empty-state i { font-size: 4rem; color: var(--border-color); margin-bottom: 1rem; }
 
@@ -151,16 +151,20 @@
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); justify-content: center; align-items: center; }
         .modal.active { display: flex; animation: fadeIn 0.3s; }
         .modal-content { background-color: var(--surface-color); padding: 2rem; border-radius: 12px; width: 90%; max-width: 500px; position: relative; animation: modalZoomIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        @keyframes modalZoomIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
         .close-btn { position: absolute; top: 1rem; right: 1rem; font-size: 1.5rem; cursor: pointer; }
+        
+        /* --- QR CODE MODAL FIX (UI Polish) --- */
+        #payment-modal .modal-content { max-width: 450px; text-align: center; }
+        #payment-modal h2 { font-size: 1.5rem; font-weight: 600; }
+        #qr-code-img { width: 100%; max-width: 300px; height: auto; aspect-ratio: 1 / 1; object-fit: contain; border-radius: 16px; margin: 1.5rem auto; display: block; box-shadow: var(--shadow); }
+        #payment-total { font-size: 1.8rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--primary-color); }
+
         #loader { display: none; position: fixed; z-index: 4000; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.7); justify-content: center; align-items: center; }
         #loader.active { display: flex; }
         .spinner { width: 50px; height: 50px; border: 5px solid var(--border-color); border-top-color: var(--primary-color); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
         #toast-container { position: fixed; top: 20px; right: 20px; z-index: 3000; }
         .toast { padding: 1rem 1.5rem; margin-bottom: 1rem; border-radius: 8px; color: white; font-weight: 500; box-shadow: var(--shadow); display: flex; align-items: center; gap: 1rem; transform: translateX(120%); animation: slideIn 0.5s forwards; }
-        .toast.success { background-color: var(--success-color); }
-        .toast.error { background-color: var(--danger-color); }
         @keyframes slideIn { to { transform: translateX(0); } }
     </style>
 </head>
@@ -392,7 +396,7 @@
                             </div>
                         </div>
                     </div>`;
-            }).join('') || '<p>No products found.</p>';
+            }).join('') || '<p class="empty-state">No products found.</p>';
             
             document.querySelectorAll(`#${gridId} .product-card`).forEach(card => observer.observe(card));
         };
@@ -531,10 +535,10 @@
         window.addEventListener('load', () => {
             // Inject Login & Payment Modal HTML
             document.getElementById('login-box').innerHTML = `
-                <div id="login-form-container"><h2>Welcome Back!</h2><p>Please log in to start shopping.</p><form id="login-form" class="form" style="display:flex; flex-direction:column; gap:1.5rem;"><input type="email" id="login-email" class="form-control" placeholder="Email" required><input type="password" id="login-password" class="form-control" placeholder="Password" required><button type="submit" class="btn btn-primary">Login</button><p>Don't have an account? <span id="show-register" style="color:var(--primary-color); cursor:pointer; font-weight:500;">Register</span></p></form></div>
-                <div id="register-form-container" style="display: none;"><h2>Create Account</h2><p>Join us and discover amazing products.</p><form id="register-form" class="form" style="display:flex; flex-direction:column; gap:1.5rem;"><input type="email" id="register-email" class="form-control" placeholder="Email" required><input type="password" id="register-password" class="form-control" placeholder="Password (min. 6 characters)" required><button type="submit" class="btn btn-primary">Register</button><p>Already have an account? <span id="show-login" style="color:var(--primary-color); cursor:pointer; font-weight:500;">Login</span></p></form></div>
+                <div id="login-form-container"><h2>Welcome Back!</h2><p>Please log in to start shopping.</p><form id="login-form" class="form" style="display:flex; flex-direction:column; gap:1.5rem;"><div class="form-group"><i class="fas fa-envelope"></i><input type="email" id="login-email" class="form-control" placeholder="Email" required></div><div class="form-group"><i class="fas fa-lock"></i><input type="password" id="login-password" class="form-control" placeholder="Password" required></div><button type="submit" class="btn btn-primary">Login</button><p style="margin-top:1.5rem;">Don't have an account? <span id="show-register" style="color:var(--primary-color); cursor:pointer; font-weight:500;">Register</span></p></form></div>
+                <div id="register-form-container" style="display: none;"><h2>Create Account</h2><p>Join us and discover amazing products.</p><form id="register-form" class="form" style="display:flex; flex-direction:column; gap:1.5rem;"><div class="form-group"><i class="fas fa-envelope"></i><input type="email" id="register-email" class="form-control" placeholder="Email" required></div><div class="form-group"><i class="fas fa-lock"></i><input type="password" id="register-password" class="form-control" placeholder="Password (min. 6 characters)" required></div><button type="submit" class="btn btn-primary">Register</button><p style="margin-top:1.5rem;">Already have an account? <span id="show-login" style="color:var(--primary-color); cursor:pointer; font-weight:500;">Login</span></p></form></div>
             `;
-            document.getElementById('payment-modal').innerHTML = `<div class="modal-content"><span class="close-btn">&times;</span><h2>Pay with </h2><p>Scan the QR code to complete your payment.</p><img id="qr-code-img" src="https://i.imgur.com/lb8Fmtv.jpeg" alt="eSewa QR Code"><p id="payment-total" style="font-size: 1.5rem; font-weight: 350; margin-bottom: 1rem;"></p><form id="payment-confirmation-form" class="form" style="display:flex; flex-direction:column; gap:1rem;"><input type="text" id="transaction-id" class="form-control" placeholder="Enter eSewa Transaction ID" required><button type="submit" class="btn btn-primary" style="width: 80%;">Confirm Payment</button></form></div>`;
+            document.getElementById('payment-modal').innerHTML = `<div class="modal-content"><span class="close-btn">&times;</span><h2>Pay with eSewa</h2><p>Scan the QR code to complete your payment.</p><img id="qr-code-img" src="https://i.imgur.com/lb8Fmtv.jpeg" alt="eSewa QR Code"><p id="payment-total"></p><form id="payment-confirmation-form" class="form" style="display:flex; flex-direction:column; gap:1rem;"><input type="text" id="transaction-id" class="form-control" placeholder="Enter eSewa Transaction ID" required><button type="submit" class="btn btn-primary" style="width: 100%;">Confirm Payment</button></form></div>`;
 
             // Attach listeners
             document.getElementById('show-register').onclick = () => { document.getElementById('login-form-container').style.display = 'none'; document.getElementById('register-form-container').style.display = 'block'; };
@@ -590,7 +594,12 @@
                 const { id, change } = quantityBtn.dataset;
                 const item = userCart.find(i => i.id === id);
                 const newQuantity = item.quantity + parseInt(change);
-                if (newQuantity >= 1) db.ref(`users/${currentUser.uid}/cart/${id}`).update({ quantity: newQuantity });
+                if (newQuantity >= 1) {
+                    db.ref(`users/${currentUser.uid}/cart/${id}`).update({ quantity: newQuantity });
+                } else {
+                    // If quantity becomes 0, remove the item
+                    db.ref(`users/${currentUser.uid}/cart/${id}`).remove();
+                }
             } else if (removeItemBtn) {
                 db.ref(`users/${currentUser.uid}/cart/${removeItemBtn.dataset.id}`).remove();
             } else if (checkoutBtn) {
