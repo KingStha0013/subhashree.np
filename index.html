@@ -12,7 +12,7 @@
     
     <style>
         /* =================================================================
-           1. PROFESSIONAL CSS WITH UI OVERHAUL
+           1. PROFESSIONAL CSS WITH UI OVERHAUL (v2.0)
            ================================================================= */
         :root {
             --primary-color: #5E5DF0;
@@ -181,7 +181,16 @@
         }
         .product-card.animate { animation: slideUp 0.6s forwards; }
         @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
-        .product-card-img { width: 100%; height: 160px; object-fit: cover; }
+        .product-card-img { 
+            width: 100%; 
+            height: 160px; 
+            object-fit: cover; 
+            /* Added this to ensure image itself animates nicely */
+            transition: transform 0.3s ease-in-out;
+        }
+        .product-card:hover .product-card-img {
+            transform: scale(1.05);
+        }
         .product-card-body { padding: 1rem; flex-grow: 1; display: flex; flex-direction: column; }
         .product-card-title { 
             font-size: 1rem; 
@@ -286,7 +295,18 @@
         
         /* Payment Modal Specific Styles */
         #payment-modal .modal-content { max-width: 450px; text-align: center; }
-        #qr-code-img { width: 100%; max-width: 300px; height: auto; aspect-ratio: 1 / 1; object-fit: contain; border-radius: 16px; margin: 1.5rem auto 1rem; display: block; box-shadow: 0 4px 12px var(--shadow-color); }
+        /* FIX: Constrains the QR code image size */
+        #payment-modal img { 
+            width: 100%; 
+            max-width: 250px; /* Reduced max-width for better fit */
+            height: auto; 
+            aspect-ratio: 1 / 1; 
+            object-fit: contain; 
+            border-radius: 16px; 
+            margin: 1.5rem auto 1rem; 
+            display: block; 
+            box-shadow: 0 4px 12px var(--shadow-color); 
+        }
         #payment-total { font-size: 1.8rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--primary-color); }
 
 
@@ -403,7 +423,7 @@
 
     <script type="module">
         // =================================================================
-        // 🔥 JAVASCRIPT LOGIC (FIXES FOR ORDERS & UI) 🔥
+        // 🔥 JAVASCRIPT LOGIC (FIXES FOR PRODUCTS & BUTTONS) 🔥
         // =================================================================
 
         // =================================================================
@@ -553,12 +573,11 @@
 
         // --- PRODUCT & DATA LOGIC ---
         const fetchProducts = () => {
-            // ... (Product fetching logic remains the same) ...
             return new Promise((resolve) => {
                 const dummyProducts = [
                     { id: 'p1', name: 'Premium Nepali Coffee Beans', price: 950, image: 'https://images.unsplash.com/photo-1510443900762-b92429403d15?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1ODc0NTZ8MHwxfHNlYXJjaHwxfHxOZXBhbGklMjBDb2ZmZWUlMjBCZWFuc3xlbnwwfHx8fDE3MDA2NjczNDB8MA&ixlib=rb-4.0.3&q=80&w=400' },
                     { id: 'p2', name: 'Handmade Pashmina Shawl', price: 5500, image: 'https://images.unsplash.com/photo-1627883262335-ee178d8a7356?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1ODc0NTZ8MHwxfHxQYXNobWluYSUyMFNoYXdsfGVufDB8fHx8MTcwMDY2NzU0MXww&ixlib=rb-4.0.3&q=80&w=400' },
-                    { id: 'p3', name: 'Mount Everest T-Shirt (Organic)', price: 1200, image: 'https://images.unsplash.com/photo-1543087903-1ac2ec7ba8c5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1ODc0NTZ8MHwxfHNlYXJjaHwxfHxNb3VudCUyMEVlcnJldCUyMFQtU2hpcnR8ZW58MHx8fHwxNzAwNjY3NTg4fDA&ixlib=rb-4.0.3&q=80&w=400' },
+                    { id: 'p3', name: 'Mount Everest T-Shirt (Organic)', price: 1200, image: 'https://images.unsplash.com/photo-1543087903-1ac2ec7ba8c5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1ODc0NTZ8MHwxfHNlYXJjaHwxfHxNb3VudCUyMEVlcnJldCUyMFQtU2hpcnR8ZW58MHx8fHwxNzAwNjY3NTg4fDA&lib=rb-4.0.3&q=80&w=400' },
                     { id: 'p4', name: 'Khukuri Knife (Ornamental)', price: 3800, image: 'https://images.unsplash.com/photo-1627883262335-ee178d8a7356?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1ODc0NTZ8MHwxfHxLaHVrdXJpJTIwS25pZmV8ZW58MHx8fHwxNzAwNjY3NjE2fDA&lib=rb-4.0.3&q=80&w=400' },
                     { id: 'p5', name: 'Almond & Honey Soap', price: 65, image: 'https://images.unsplash.com/photo-1627883262335-ee178d8a7356?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1ODc0NTZ8MHwxfHxzZWFc2hpbnVuaW5nfGVufDB8fHx8MTcwMDY2NzU0MXww&lib=rb-4.0.3&q=80&w=400' },
                 ];
@@ -583,14 +602,24 @@
 
             productsToRender.forEach((product, index) => {
                 const isWishlisted = userWishlist.some(item => item.id === product.id);
+                
+                // **** THE FIX IS HERE ****
+                // The previous code used `product.image`, but your Firebase data likely uses `product.imageUrl`.
+                // This new logic checks for `imageUrl` first, then falls back to `image`.
+                const imageSource = product.imageUrl || product.image;
                 const defaultImage = 'https://via.placeholder.com/300x160?text=SubhaShree';
+                const imageUrl = imageSource && imageSource.startsWith('http') ? imageSource : defaultImage;
 
                 grid.innerHTML += `
                     <div class="product-card" data-id="${product.id}" data-index="${index}">
-                        <img src="${product.image || defaultImage}" alt="${product.name}" class="product-card-img">
+                        <img src="${imageUrl}" 
+                             alt="${product.name}" 
+                             class="product-card-img"
+                             onerror="this.onerror=null;this.src='${defaultImage}';">
+                        
                         <div class="product-card-body">
                             <h3 class="product-card-title">${product.name}</h3>
-                            <p class="product-card-price">${CURRENCY}${product.price.toFixed(2)}</p>
+                            <p class="product-card-price">${CURRENCY}${(product.price || 0).toFixed(2)}</p>
                             <div class="product-card-actions">
                                 <button class="icon-btn wishlist-btn ${isWishlisted ? 'active' : ''}" data-id="${product.id}">
                                     <i class="fas fa-heart"></i>
@@ -650,7 +679,7 @@
                         id: product.id, 
                         name: product.name, 
                         price: product.price, 
-                        image: product.image,
+                        image: product.imageUrl || product.image, // Ensure we save the correct image property
                         quantity: 1 
                     });
                     showToast('Added to cart!', 'success'); 
@@ -691,7 +720,7 @@
             const summary = document.getElementById('cart-summary');
             
             const cartItemCount = userCart.reduce((sum, item) => sum + item.quantity, 0);
-            const cartSubtotal = userCart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+            const cartSubtotal = userCart.reduce((sum, item) => sum + (item.price || 0) * item.quantity, 0);
             const isCartEmpty = cartItemCount === 0;
             // Shipping is charged only if the cart is not empty
             const finalShipping = isCartEmpty ? 0 : SHIPPING_COST;
@@ -703,10 +732,10 @@
             } else {
                 container.innerHTML = userCart.map(item => `
                     <div class="cart-item" data-id="${item.id}">
-                        <img src="${item.image || 'https://via.placeholder.com/80?text=Item'}" alt="${item.name}" class="cart-item-img">
+                        <img src="${item.imageUrl || item.image || 'https://via.placeholder.com/80?text=Item'}" alt="${item.name}" class="cart-item-img">
                         <div class="cart-item-details">
                             <div class="cart-item-name">${item.name}</div>
-                            <div class="cart-item-price">${CURRENCY}${item.price.toFixed(2)} each</div>
+                            <div class="cart-item-price">${CURRENCY}${(item.price || 0).toFixed(2)} each</div>
                         </div>
                         <div class="cart-item-actions">
                             <div class="quantity-control">
@@ -960,7 +989,7 @@
                         Scan the QR code below to pay via eSewa/Khalti, then fill in the confirmation details.
                     </p>
                     <div id="payment-total">${finalTotal}</div>
-                    <img id="https://i.imgur.com/wAepZVa.jpeg" src="https://i.imgur.com/wAepZVa.jpeg" alt="QR Code">
+                    <img id="qr-code-img" src="https://i.imgur.com/wAepZVa.jpeg" alt="eSewa QR Code">
                     
                     <form id="payment-form">
                         <div class="form-group">
