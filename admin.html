@@ -290,6 +290,23 @@
         .modal.active { display: flex; animation: fadeIn 0.3s; }
         .modal-content { background-color: var(--surface-color); padding: 2rem; border-radius: 12px; width: 90%; max-width: 500px; position: relative; animation: modalZoomIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); margin: 3rem 0; }
         
+        /* 🔥 NEW: Product Detail Modal Styles 🔥 */
+        #product-detail-modal .modal-content { max-width: 700px; padding: 0; }
+        .pdp-container { padding: 1.5rem; }
+        .pdp-img { 
+            width: 100%; 
+            height: 300px; 
+            object-fit: cover; 
+            border-radius: 12px 12px 0 0;
+        }
+        .pdp-title { font-size: 1.8rem; font-weight: 700; margin: 1rem 0 0.5rem; }
+        .pdp-price { font-size: 2.2rem; font-weight: 800; color: var(--danger-color); margin-bottom: 1rem; }
+        .pdp-description { color: var(--subtle-text-color); margin-bottom: 1.5rem; }
+        .pdp-actions { display: flex; gap: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-color); }
+        .pdp-actions .btn { flex-grow: 1; }
+        .pdp-actions .icon-btn { width: 50px; height: 50px; flex-shrink: 0; }
+
+
         .close-btn { position: absolute; top: 1rem; right: 1rem; font-size: 1.5rem; cursor: pointer; transition: color 0.2s; }
         .close-btn:hover { color: var(--danger-color); }
         
@@ -355,6 +372,7 @@
 
     <div id="auth-modal" class="modal"></div>
     <div id="payment-modal" class="modal"></div>
+    <div id="product-detail-modal" class="modal"></div>
 
     <div id="store-view" style="display: none;">
         <header>
@@ -414,8 +432,6 @@
         </div>
         <div id="search-results-grid" class="product-grid"></div>
     </div>
-
-    <div id="product-detail-modal" class="modal"></div>
     
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
@@ -423,7 +439,7 @@
 
     <script type="module">
         // =================================================================
-        // 🔥 JAVASCRIPT LOGIC (FIXES FOR PRODUCTS & BUTTONS) 🔥
+        // 🔥 JAVASCRIPT LOGIC (FIXES & PDP FEATURE ADDED) 🔥
         // =================================================================
 
         // =================================================================
@@ -446,6 +462,7 @@
         const db = firebase.database();
         const CURRENCY = 'रू';
         const SHIPPING_COST = 50.00;
+        const DEFAULT_IMAGE = 'https://via.placeholder.com/300x160?text=SubhaShree';
 
         let products = [], currentUser = null, userWishlist = [], userCart = [], userOrders = []; 
 
@@ -574,12 +591,13 @@
         // --- PRODUCT & DATA LOGIC ---
         const fetchProducts = () => {
             return new Promise((resolve) => {
+                // Added 'description' for the new PDP feature
                 const dummyProducts = [
-                    { id: 'p1', name: 'Premium Nepali Coffee Beans', price: 950, image: 'https://images.unsplash.com/photo-1510443900762-b92429403d15?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1ODc0NTZ8MHwxfHNlYXJjaHwxfHxOZXBhbGklMjBDb2ZmZWUlMjBCZWFuc3xlbnwwfHx8fDE3MDA2NjczNDB8MA&ixlib=rb-4.0.3&q=80&w=400' },
-                    { id: 'p2', name: 'Handmade Pashmina Shawl', price: 5500, image: 'https://images.unsplash.com/photo-1627883262335-ee178d8a7356?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1ODc0NTZ8MHwxfHxQYXNobWluYSUyMFNoYXdsfGVufDB8fHx8MTcwMDY2NzU0MXww&ixlib=rb-4.0.3&q=80&w=400' },
-                    { id: 'p3', name: 'Mount Everest T-Shirt (Organic)', price: 1200, image: 'https://images.unsplash.com/photo-1543087903-1ac2ec7ba8c5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1ODc0NTZ8MHwxfHNlYXJjaHwxfHxNb3VudCUyMEVlcnJldCUyMFQtU2hpcnR8ZW58MHx8fHwxNzAwNjY3NTg4fDA&lib=rb-4.0.3&q=80&w=400' },
-                    { id: 'p4', name: 'Khukuri Knife (Ornamental)', price: 3800, image: 'https://images.unsplash.com/photo-1627883262335-ee178d8a7356?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1ODc0NTZ8MHwxfHxLaHVrdXJpJTIwS25pZmV8ZW58MHx8fHwxNzAwNjY3NjE2fDA&lib=rb-4.0.3&q=80&w=400' },
-                    { id: 'p5', name: 'Almond & Honey Soap', price: 65, image: 'https://images.unsplash.com/photo-1627883262335-ee178d8a7356?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1ODc0NTZ8MHwxfHxzZWFc2hpbnVuaW5nfGVufDB8fHx8MTcwMDY2NzU0MXww&lib=rb-4.0.3&q=80&w=400' },
+                    { id: 'p1', name: 'Premium Nepali Coffee Beans', price: 950, image: 'https://images.unsplash.com/photo-1510443900762-b92429403d15?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1ODc0NTZ8MHwxfHNlYXJjaHwxfHxOZXBhbGklMjBDb2ZmZWUlMjBCZWFuc3xlbnwwfHx8fDE3MDA2NjczNDB8MA&lib=rb-4.0.3&q=80&w=400', description: 'Finest Arabica beans sourced directly from the high-altitude farms of Nepal. Known for its rich aroma and balanced, subtle fruity notes.' },
+                    { id: 'p2', name: 'Handmade Pashmina Shawl', price: 5500, image: 'https://images.unsplash.com/photo-1627883262335-ee178d8a7356?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1ODc0NTZ8MHwxfHxQYXNobWluYSUyMFNoYXdsfGVufDB8fHx8MTcwMDY2NzU0MXww&lib=rb-4.0.3&q=80&w=400', description: 'Luxuriously soft and warm shawl, meticulously hand-woven from the highest quality Himalayan goat wool. A timeless piece of elegance.' },
+                    { id: 'p3', name: 'Mount Everest T-Shirt (Organic)', price: 1200, image: 'https://images.unsplash.com/photo-1543087903-1ac2ec7ba8c5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1ODc0NTZ8MHwxfHNlYXJjaHwxfHxNb3VudCUyMEVlcnJldCUyMFQtU2hpcnR8ZW58MHx8fHwxNzAwNjY3NTg4fDA&lib=rb-4.0.3&q=80&w=400', description: 'Comfortable, 100% organic cotton T-shirt with a minimalist Everest graphic. Eco-friendly and ethically produced.' },
+                    { id: 'p4', name: 'Khukuri Knife (Ornamental)', price: 3800, image: 'https://images.unsplash.com/photo-1627883262335-ee178d8a7356?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1ODc0NTZ8MHwxfHxLaHVrdXJpJTIwS25pZmV8ZW58MHx8fHwxNzAwNjY3NjE2fDA&lib=rb-4.0.3&q=80&w=400', description: 'A beautifully crafted, non-functional Khukuri, perfect as a display piece or souvenir. Represents Gurkha pride and heritage.' },
+                    { id: 'p5', name: 'Almond & Honey Soap', price: 65, image: 'https://images.unsplash.com/photo-1627883262335-ee178d8a7356?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1ODc0NTZ8MHwxfHxzZWFc2hpbnVuaW5nfGVufDB8fHx8MTcwMDY2NzU0MXww&lib=rb-4.0.3&q=80&w=400', description: 'Natural, moisturizing soap enriched with pure almond oil and organic Nepali honey. Gently cleanses and nourishes the skin.' },
                 ];
                 
                 db.ref('products').once('value', (snapshot) => {
@@ -603,19 +621,16 @@
             productsToRender.forEach((product, index) => {
                 const isWishlisted = userWishlist.some(item => item.id === product.id);
                 
-                // **** THE FIX IS HERE ****
-                // The previous code used `product.image`, but your Firebase data likely uses `product.imageUrl`.
-                // This new logic checks for `imageUrl` first, then falls back to `image`.
+                // **** IMPROVED IMAGE PATH LOGIC ****
                 const imageSource = product.imageUrl || product.image;
-                const defaultImage = 'https://via.placeholder.com/300x160?text=SubhaShree';
-                const imageUrl = imageSource && imageSource.startsWith('http') ? imageSource : defaultImage;
+                const imageUrl = imageSource && imageSource.startsWith('http') ? imageSource : DEFAULT_IMAGE;
 
                 grid.innerHTML += `
                     <div class="product-card" data-id="${product.id}" data-index="${index}">
                         <img src="${imageUrl}" 
                              alt="${product.name}" 
                              class="product-card-img"
-                             onerror="this.onerror=null;this.src='${defaultImage}';">
+                             onerror="this.onerror=null;this.src='${DEFAULT_IMAGE}';">
                         
                         <div class="product-card-body">
                             <h3 class="product-card-title">${product.name}</h3>
@@ -634,6 +649,25 @@
             });
             
             document.querySelectorAll('.product-card').forEach(card => observer.observe(card));
+
+            // 🔥 NEW: Attach click listener for PDP
+            document.querySelectorAll('.product-card').forEach(card => {
+                // Ensure clicking the buttons inside doesn't trigger the modal
+                card.removeEventListener('click', handleProductCardClick);
+                card.addEventListener('click', handleProductCardClick);
+            });
+        };
+        
+        // 🔥 NEW: Event handler for product card click
+        const handleProductCardClick = (e) => {
+            // Prevent opening PDP if an action button (cart/wishlist) was clicked
+            if (e.target.closest('.add-to-cart-btn') || e.target.closest('.wishlist-btn')) {
+                return;
+            }
+            
+            const card = e.currentTarget;
+            const productId = card.dataset.id;
+            renderProductDetailModal(productId);
         };
 
         const getProductDetails = (productId) => {
@@ -655,6 +689,39 @@
             updateBadge('cart-badge-mobile', cartCount);
             updateBadge('wishlist-badge-mobile', wishlistCount);
         };
+        
+        // 🔥 NEW: Render Product Detail Modal (PDP)
+        const renderProductDetailModal = (productId) => {
+            const product = getProductDetails(productId);
+            if (!product) return;
+            
+            const modal = document.getElementById('product-detail-modal');
+            const isWishlisted = userWishlist.some(item => item.id === product.id);
+            const imageUrl = product.imageUrl || product.image || DEFAULT_IMAGE;
+            
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <i class="fas fa-times close-btn" onclick="document.getElementById('product-detail-modal').classList.remove('active')"></i>
+                    <img src="${imageUrl}" alt="${product.name}" class="pdp-img">
+                    <div class="pdp-container">
+                        <h2 class="pdp-title">${product.name}</h2>
+                        <p class="pdp-price">${CURRENCY}${(product.price || 0).toFixed(2)}</p>
+                        <p class="pdp-description">${product.description || 'No detailed description available for this product.'}</p>
+                        
+                        <div class="pdp-actions">
+                            <button class="icon-btn wishlist-btn ${isWishlisted ? 'active' : ''}" data-id="${product.id}" onclick="toggleWishlist('${product.id}'); this.classList.toggle('active')">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                            <button class="btn btn-primary add-to-cart-btn" data-id="${product.id}" onclick="addToCart('${product.id}'); document.getElementById('product-detail-modal').classList.remove('active');">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            modal.classList.add('active');
+        };
+
 
         // --- CART & WISHLIST LOGIC ---
         
@@ -667,28 +734,33 @@
             else { db.ref(`users/${currentUser.uid}/cart`).set(userCart); }
         };
         
+        // 🔥 FIX: Corrected function to ensure the product image property is retrieved correctly
         const addToCart = (productId) => { 
+            const product = getProductDetails(productId);
+            if (!product) {
+                return showToast('Error: Product not found.', 'error');
+            }
+            
             const existingItem = userCart.find(item => item.id === productId);
             if (existingItem) {
                 existingItem.quantity += 1;
                 showToast('Quantity increased in cart!', 'success');
             } else {
-                const product = getProductDetails(productId);
-                if (product) {
-                    userCart.push({ 
-                        id: product.id, 
-                        name: product.name, 
-                        price: product.price, 
-                        image: product.imageUrl || product.image, // Ensure we save the correct image property
-                        quantity: 1 
-                    });
-                    showToast('Added to cart!', 'success'); 
-                }
+                userCart.push({ 
+                    id: product.id, 
+                    name: product.name, 
+                    price: product.price, 
+                    // Use the correct image property for cart storage
+                    image: product.imageUrl || product.image, 
+                    quantity: 1 
+                });
+                showToast('Added to cart!', 'success'); 
             }
             saveCart();
             updateBadges();
             if(window.location.hash === '#cart') renderCart();
-            renderProducts(products, 'product-grid');
+            // Re-render home page to update wishlist status on cards
+            if(window.location.hash === '#home') renderProducts(products, 'product-grid');
         };
 
         const updateCartItemQuantity = (productId, change) => {
@@ -732,7 +804,7 @@
             } else {
                 container.innerHTML = userCart.map(item => `
                     <div class="cart-item" data-id="${item.id}">
-                        <img src="${item.imageUrl || item.image || 'https://via.placeholder.com/80?text=Item'}" alt="${item.name}" class="cart-item-img">
+                        <img src="${item.image || DEFAULT_IMAGE}" alt="${item.name}" class="cart-item-img">
                         <div class="cart-item-details">
                             <div class="cart-item-name">${item.name}</div>
                             <div class="cart-item-price">${CURRENCY}${(item.price || 0).toFixed(2)} each</div>
@@ -806,7 +878,7 @@
         // FIX: Order Placement Logic
         const placeOrder = (transactionId, message) => {
             const cartItems = userCart.map(item => ({ ...item })); 
-            const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+            const subtotal = cartItems.reduce((sum, item) => sum + (item.price || 0) * item.quantity, 0);
             // Ensure shipping is charged
             const total = subtotal + SHIPPING_COST;
             
@@ -859,7 +931,7 @@
                         <small style="color: var(--subtle-text-color);">Txn ID: ${order.transactionId}</small>
                         <ul>
                             ${order.items.map(item => `
-                                <li>${item.quantity}x ${item.name} (${CURRENCY}${(item.price * item.quantity).toFixed(2)})</li>
+                                <li>${item.quantity}x ${item.name} (${CURRENCY}${((item.price || 0) * item.quantity).toFixed(2)})</li>
                             `).join('')}
                             <li style="font-weight: 500;">Shipping: ${CURRENCY}${order.shipping.toFixed(2)}</li>
                         </ul>
