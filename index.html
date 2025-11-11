@@ -439,7 +439,7 @@
 
     <script type="module">
         // =================================================================
-        // 🔥 JAVASCRIPT LOGIC (FIXES & PDP FEATURE ADDED) 🔥
+        // 🔥 JAVASCRIPT LOGIC (FIX FOR FIREBASE ORDERS) 🔥
         // =================================================================
 
         // =================================================================
@@ -525,7 +525,6 @@
             }
         };
 
-        // FIX: Ensure userOrders is initialized for guest user
         const loadGuestData = () => {
             userCart = JSON.parse(localStorage.getItem('cart')) || [];
             userWishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
@@ -545,12 +544,10 @@
                 updateBadges(); if(window.location.hash === '#wishlist') renderWishlist();
             });
             // Load Orders
-            db.ref(`users/${uid}/orders`).once('value', snap => {
-                // Firebase stores objects, convert to array and sort by latest date if possible
+            db.ref(`orders`).orderByChild('userId').equalTo(uid).on('value', snap => {
                 const ordersObject = snap.val();
-                userOrders = ordersObject ? Object.keys(ordersObject).map(key => ordersObject[key]) : [];
-                // Simple sort by ID (Date.now() used in ID generation makes it time-based)
-                userOrders.sort((a, b) => b.id.localeCompare(a.id)); 
+                userOrders = ordersObject ? Object.keys(ordersObject).map(key => ({...ordersObject[key], id: key})) : [];
+                userOrders.sort((a, b) => b.date.localeCompare(a.date)); 
                 if(window.location.hash === '#orders') renderOrders();
             });
         };
@@ -875,36 +872,38 @@
             renderProducts(wishlistProducts, 'wishlist-items');
         };
 
-        // FIX: Order Placement Logic
+        // 🔥 FIX: Order Placement Logic to save to global 'orders' collection
         const placeOrder = (transactionId, message) => {
             const cartItems = userCart.map(item => ({ ...item })); 
             const subtotal = cartItems.reduce((sum, item) => sum + (item.price || 0) * item.quantity, 0);
-            // Ensure shipping is charged
             const total = subtotal + SHIPPING_COST;
             
             const newOrder = {
-                id: `ORD-${Date.now()}`,
-                date: new Date().toLocaleDateString(),
+                // id: `ORD-${Date.now()}`, // Not needed, Firebase push key will be the ID
+                date: new Date().toISOString(), // Use ISO string for better sorting
                 status: 'Processing',
                 subtotal: subtotal,
                 shipping: SHIPPING_COST,
                 total: total,
                 transactionId: transactionId,
                 message: message,
-                items: cartItems
+                items: cartItems,
+                // Add user info if logged in
+                userId: currentUser ? currentUser.uid : 'guest',
+                userEmail: currentUser ? currentUser.email : 'guest'
             };
 
-            // Add the new order to the front of the local array
-            userOrders.unshift(newOrder); 
-            
-            // Save to local storage for guest
-            if (!currentUser) {
-                localStorage.setItem('orders', JSON.stringify(userOrders));
-            } 
-            // Save to Firebase for logged in users
-            else {
-                // Use push() to generate a unique key for each order
+            // Save to the global 'orders' collection in Firebase for everyone
+            db.ref('orders').push(newOrder);
+
+            // Also save a reference for logged-in users if you want them to see their own orders
+            if (currentUser) {
+                // This part is for the user's own order history page
                 db.ref(`users/${currentUser.uid}/orders`).push(newOrder);
+            } else {
+                // For guests, we still save to local storage so they can see their order history
+                userOrders.unshift(newOrder); 
+                localStorage.setItem('orders', JSON.stringify(userOrders));
             }
         }
         
@@ -920,11 +919,11 @@
             container.innerHTML = userOrders.map(order => `
                 <div class="order-item">
                     <div class="order-header">
-                        <span>Order ID: <span class="order-id">${order.id.split('-').pop()}</span></span>
+                        <span>Order ID: <span class="order-id">${order.id ? order.id.substring(order.id.length - 6) : 'N/A'}</span></span>
                         <span class="order-total">${CURRENCY}${order.total.toFixed(2)}</span>
                     </div>
                     <div class="order-header">
-                        <span>Date: ${order.date}</span>
+                        <span>Date: ${new Date(order.date).toLocaleDateString()}</span>
                         <span class="order-status" style="color: ${order.status === 'Processing' ? '#f39c12' : '#2ecc71'};">${order.status}</span>
                     </div>
                     <div class="order-details">
@@ -1050,6 +1049,13 @@
         };
         
         const openPaymentModal = () => {
+            // FIX: Require login before allowing payment
+            if (!currentUser) {
+                showToast('Please log in to place an order.', 'error');
+                openAuthModal();
+                return;
+            }
+
             const finalTotal = document.getElementById('final-total')?.textContent || `${CURRENCY}0.00`;
             
             const modal = document.getElementById('payment-modal');
