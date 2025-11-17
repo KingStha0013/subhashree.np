@@ -290,15 +290,83 @@
         .modal.active { display: flex; animation: fadeIn 0.3s; }
         .modal-content { background-color: var(--surface-color); padding: 2rem; border-radius: 12px; width: 90%; max-width: 500px; position: relative; animation: modalZoomIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); margin: 3rem 0; }
         
-        /* 🔥 NEW: Product Detail Modal Styles 🔥 */
+        /* 🔥 NEW & MODIFIED: Product Detail Modal & Image Slider Styles 🔥 */
         #product-detail-modal .modal-content { max-width: 700px; padding: 0; }
         .pdp-container { padding: 1.5rem; }
-        .pdp-img { 
-            width: 100%; 
-            height: 300px; 
-            object-fit: cover; 
+        
+        /* Image Slider Container */
+        .pdp-image-slider {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
             border-radius: 12px 12px 0 0;
+            background-color: var(--border-color);
         }
+        /* Hide controls if only one image */
+        .pdp-image-slider.single-image .slider-btn,
+        .pdp-image-slider.single-image .slider-pagination {
+            display: none;
+        }
+
+        .pdp-slider-wrapper {
+            display: flex;
+            height: 100%;
+            transition: transform 0.4s ease-in-out;
+        }
+
+        .pdp-slider-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.4);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .slider-btn:hover { background-color: rgba(0, 0, 0, 0.7); }
+        .slider-btn.prev { left: 10px; }
+        .slider-btn.next { right: 10px; }
+
+        .slider-pagination {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+        .slider-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+        .slider-dot.active {
+            background-color: white;
+            transform: scale(1.2);
+        }
+        /* End of Image Slider Styles */
+
         .pdp-title { font-size: 1.8rem; font-weight: 700; margin: 1rem 0 0.5rem; }
         .pdp-price { font-size: 2.2rem; font-weight: 800; color: var(--danger-color); margin-bottom: 1rem; }
         .pdp-description { color: var(--subtle-text-color); margin-bottom: 1.5rem; }
@@ -756,19 +824,35 @@
             updateBadge('wishlist-badge-mobile', wishlistCount);
         };
         
-        // 🔥 NEW: Render Product Detail Modal (PDP)
+        // 🔥 MODIFIED: Render Product Detail Modal to include image slider
         const renderProductDetailModal = (productId) => {
             const product = getProductDetails(productId);
             if (!product) return;
             
             const modal = document.getElementById('product-detail-modal');
             const isWishlisted = userWishlist.some(item => item.id === product.id);
-            const imageUrl = product.imageUrl || product.image || DEFAULT_IMAGE;
             
+            // Collect all available image URLs
+            const imageUrls = [product.imageUrl || product.image];
+            if (product.imageUrl2) imageUrls.push(product.imageUrl2);
+            if (product.imageUrl3) imageUrls.push(product.imageUrl3);
+            if (product.imageUrl4) imageUrls.push(product.imageUrl4);
+            
+            // Generate HTML for image slides and pagination dots
+            const slidesHtml = imageUrls.map(url => `<img src="${url || DEFAULT_IMAGE}" alt="${product.name}">`).join('');
+            const dotsHtml = imageUrls.map((_, index) => `<div class="slider-dot ${index === 0 ? 'active' : ''}" data-index="${index}"></div>`).join('');
+
             modal.innerHTML = `
                 <div class="modal-content">
                     <i class="fas fa-times close-btn" onclick="document.getElementById('product-detail-modal').classList.remove('active')"></i>
-                    <img src="${imageUrl}" alt="${product.name}" class="pdp-img">
+                    
+                    <div class="pdp-image-slider ${imageUrls.length <= 1 ? 'single-image' : ''}">
+                        <div class="pdp-slider-wrapper">${slidesHtml}</div>
+                        <button class="slider-btn prev"><i class="fas fa-chevron-left"></i></button>
+                        <button class="slider-btn next"><i class="fas fa-chevron-right"></i></button>
+                        <div class="slider-pagination">${dotsHtml}</div>
+                    </div>
+
                     <div class="pdp-container">
                         <h2 class="pdp-title">${product.name}</h2>
                         <p class="pdp-price">${CURRENCY}${(product.price || 0).toFixed(2)}</p>
@@ -786,8 +870,41 @@
                 </div>
             `;
             modal.classList.add('active');
+            
+            // Initialize the slider logic if there's more than one image
+            if (imageUrls.length > 1) {
+                setupProductImageSlider();
+            }
         };
 
+        // 🔥 NEW: Function to control the image slider in the product detail modal
+        const setupProductImageSlider = () => {
+            const slider = document.querySelector('.pdp-image-slider');
+            if (!slider) return;
+
+            const wrapper = slider.querySelector('.pdp-slider-wrapper');
+            const prevBtn = slider.querySelector('.slider-btn.prev');
+            const nextBtn = slider.querySelector('.slider-btn.next');
+            const dots = slider.querySelectorAll('.slider-dot');
+            const totalSlides = dots.length;
+            let currentIndex = 0;
+
+            const goToSlide = (index) => {
+                if (index < 0) index = totalSlides - 1;
+                if (index >= totalSlides) index = 0;
+
+                wrapper.style.transform = `translateX(-${index * 100}%)`;
+                dots.forEach(dot => dot.classList.remove('active'));
+                dots[index].classList.add('active');
+                currentIndex = index;
+            };
+
+            prevBtn.addEventListener('click', () => goToSlide(currentIndex - 1));
+            nextBtn.addEventListener('click', () => goToSlide(currentIndex + 1));
+            dots.forEach(dot => {
+                dot.addEventListener('click', () => goToSlide(parseInt(dot.dataset.index)));
+            });
+        };
 
         // --- CART & WISHLIST LOGIC ---
         
