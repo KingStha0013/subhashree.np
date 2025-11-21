@@ -379,7 +379,7 @@
         .close-btn:hover { color: var(--danger-color); }
         
         /* Payment Modal Specific Styles */
-        #payment-modal .modal-content { max-width: 450px; text-align: center; }
+        #payment-modal .modal-content { max-width: 400px; height: 700; text-align: center; top: 50px;}
         /* FIX: Constrains the QR code image size */
         #payment-modal img { 
             width: 100%; 
@@ -598,7 +598,7 @@
         const auth = firebase.auth();
         const db = firebase.database();
         const CURRENCY = 'रू';
-        const SHIPPING_COST = 50.00;
+        const SHIPPING_COST = 120.00;
         const DEFAULT_IMAGE = 'https://via.placeholder.com/300x160?text=SubhaShree';
 
         let products = [], currentUser = null, userWishlist = [], userCart = [], userOrders = []; 
