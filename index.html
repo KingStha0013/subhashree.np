@@ -11,9 +11,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <style>
-        /* =================================================================
-           1. PROFESSIONAL CSS WITH UI OVERHAUL (v2.0)
-           ================================================================= */
         :root {
             --primary-color: #5E5DF0;
             --background-color: #f4f5f7;
@@ -50,57 +47,18 @@
             transition: background-color 0.3s, color 0.3s;
         }
 
-        /* --- Splash Screen FIX: Removed image rotation, improved loader --- */
+        /* --- Splash Screen --- */
         #splash-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--background-color);
-            z-index: 5000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--background-color); z-index: 5000;
+            display: flex; justify-content: center; align-items: center; flex-direction: column;
             transition: opacity 0.5s ease-out;
         }
-        .splash-logo {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: var(--primary-color);
-        }
-        .splash-logo img {
-            width: 50px;
-            height: 50px;
-        }
-        .splash-loader {
-            width: 150px;
-            height: 4px;
-            background-color: var(--border-color);
-            border-radius: 2px;
-            margin-top: 1.5rem;
-            position: relative;
-            overflow: hidden;
-        }
-        .splash-loader::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: 50%;
-            background-color: var(--primary-color);
-            border-radius: 2px;
-            animation: slide-in-out 2s infinite ease-in-out;
-        }
-        @keyframes slide-in-out {
-            0%, 100% { left: -50%; }
-            50% { left: 100%; }
-        }
+        .splash-logo { display: flex; align-items: center; gap: 1rem; font-size: 2.5rem; font-weight: 800; color: var(--primary-color); }
+        .splash-logo img { width: 50px; height: 50px; }
+        .splash-loader { width: 150px; height: 4px; background-color: var(--border-color); border-radius: 2px; margin-top: 1.5rem; position: relative; overflow: hidden; }
+        .splash-loader::after { content: ''; position: absolute; top: 0; left: 0; height: 100%; width: 50%; background-color: var(--primary-color); border-radius: 2px; animation: slide-in-out 2s infinite ease-in-out; }
+        @keyframes slide-in-out { 0%, 100% { left: -50%; } 50% { left: 100%; } }
 
         /* --- Universal Components --- */
         .container { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; }
@@ -108,23 +66,24 @@
         .btn { padding: 0.8rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; text-decoration: none; display: inline-flex; justify-content: center; align-items: center; gap: 0.5rem; transition: all 0.3s; font-size: 1rem; width: 100%; }
         .btn:active { transform: scale(0.97); }
         .btn-primary { background-color: var(--primary-color); color: white; box-shadow: 0 4px 6px rgba(94, 93, 240, 0.2); }
-        .btn-primary:disabled { 
-            background-color: var(--subtle-text-color);
-            cursor: not-allowed;
-            box-shadow: none;
-        }
         .form-control { padding: 0.85rem; border: 1px solid var(--border-color); border-radius: 8px; width: 100%; transition: border-color 0.3s, box-shadow 0.3s; font-size: 1rem; background-color: var(--surface-color); color: var(--text-color); }
         .form-control:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(94, 93, 240, 0.2); }
-        .form-group { position: relative; margin-bottom: 1.5rem; }
+        .form-group { position: relative; margin-bottom: 1rem; }
+        label { font-weight: 600; font-size: 0.9rem; display: block; margin-bottom: 0.3rem; color: var(--text-color); }
+
+        /* --- Radio Box Styles (New) --- */
+        .radio-group { display: flex; gap: 10px; }
+        .radio-box { 
+            flex: 1; border: 1px solid var(--border-color); padding: 10px; border-radius: 8px; 
+            cursor: pointer; text-align: center; font-size: 0.9rem; transition: all 0.2s;
+            background: var(--surface-color);
+        }
+        .radio-box:hover { border-color: var(--primary-color); }
+        .radio-box input { display: none; }
+        .radio-box.active { background-color: rgba(94, 93, 240, 0.1); border-color: var(--primary-color); color: var(--primary-color); font-weight: 600; }
 
         /* --- Layout & Structure --- */
-        header { 
-            position: sticky; top: 0; left: 0; width: 100%; 
-            background-color: rgba(var(--surface-rgb), 0.85); 
-            backdrop-filter: blur(10px); 
-            border-bottom: 1px solid var(--border-color); 
-            z-index: 1000; padding: 1rem 0; 
-        }
+        header { position: sticky; top: 0; left: 0; width: 100%; background-color: rgba(var(--surface-rgb), 0.85); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-color); z-index: 1000; padding: 1rem 0; }
         .navbar { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 1.75rem; font-weight: 700; color: var(--primary-color); text-decoration: none; }
         .header-icons { display: flex; align-items: center; gap: 1.5rem; }
@@ -132,7 +91,7 @@
         .icon-link:hover { color: var(--primary-color); }
         
         /* --- Badge System --- */
-        .badge { position: absolute; top: -8px; right: -10px; background-color: var(--danger-color); color: white; border-radius: 50%; width: 22px; height: 22px; font-size: 0.75rem; display: flex; justify-content: center; align-items: center; font-weight: 600; border: 2px solid var(--surface-color); transform: scale(0); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .badge { position: absolute; top: -8px; right: -10px; background-color: var(--danger-color); color: white; border-radius: 50%; width: 22px; height: 22px; font-size: 0.75rem; display: flex; justify-content: center; align-items: center; font-weight: 600; border: 2px solid var(--surface-color); transform: scale(0); transition: transform 0.3s; }
         .badge.visible { transform: scale(1); }
         
         main { padding: 1.5rem 0 80px 0; }
@@ -142,15 +101,10 @@
 
         /* --- Bottom Navigation (Mobile Only) --- */
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 70px; background: var(--surface-color); box-shadow: 0 -2px 10px var(--shadow-color); display: flex; justify-content: space-around; align-items: center; z-index: 1000; border-top-left-radius: 16px; border-top-right-radius: 16px; }
-        .bottom-nav-link { 
-            display: flex; flex-direction: column; align-items: center; 
-            color: var(--subtle-text-color); text-decoration: none; font-size: 0.7rem; 
-            transition: color 0.3s, transform 0.2s; position: relative; 
-            flex-grow: 1; /* Ensures even distribution */
-        }
+        .bottom-nav-link { display: flex; flex-direction: column; align-items: center; color: var(--subtle-text-color); text-decoration: none; font-size: 0.7rem; transition: color 0.3s, transform 0.2s; position: relative; flex-grow: 1; }
         .bottom-nav-link i { font-size: 1.4rem; margin-bottom: 4px; }
         .bottom-nav-link.active { color: var(--primary-color); transform: translateY(-3px); }
-        .bottom-nav-link .badge { top: -5px; right: 5px; } /* Adjusted badge position for better balance */
+        .bottom-nav-link .badge { top: -5px; right: 5px; }
 
         /* --- Desktop Navigation --- */
         @media (min-width: 768px) {
@@ -162,79 +116,20 @@
 
         /* --- Product Grid & Cards --- */
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.75rem; }
-        .product-card { 
-            background-color: var(--surface-color); 
-            border-radius: 16px;
-            box-shadow: 0 6px 16px var(--shadow-color);
-            overflow: hidden; 
-            display: flex; 
-            flex-direction: column; 
-            transition: transform 0.3s, box-shadow 0.3s; 
-            opacity: 0; 
-            transform: translateY(30px); 
-            cursor: pointer; 
-            border: 1px solid var(--border-color);
-        }
-        .product-card:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 10px 20px var(--shadow-color);
-        }
+        .product-card { background-color: var(--surface-color); border-radius: 16px; box-shadow: 0 6px 16px var(--shadow-color); overflow: hidden; display: flex; flex-direction: column; transition: transform 0.3s, box-shadow 0.3s; opacity: 0; transform: translateY(30px); cursor: pointer; border: 1px solid var(--border-color); }
+        .product-card:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 10px 20px var(--shadow-color); }
         .product-card.animate { animation: slideUp 0.6s forwards; }
         @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
-        .product-card-img { 
-            width: 100%; 
-            height: 160px; 
-            object-fit: cover; 
-            /* Added this to ensure image itself animates nicely */
-            transition: transform 0.3s ease-in-out;
-        }
-        .product-card:hover .product-card-img {
-            transform: scale(1.05);
-        }
+        .product-card-img { width: 100%; height: 160px; object-fit: cover; transition: transform 0.3s ease-in-out; }
+        .product-card:hover .product-card-img { transform: scale(1.05); }
         .product-card-body { padding: 1rem; flex-grow: 1; display: flex; flex-direction: column; }
-        .product-card-title { 
-            font-size: 1rem; 
-            font-weight: 600; 
-            margin-bottom: 0.25rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .product-card-price { 
-            font-size: 1.2rem; 
-            font-weight: 700; 
-            color: var(--primary-color); 
-            margin-bottom: 0.75rem; 
-        }
-        .product-card-actions { 
-            margin-top: auto; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            gap: 0.5rem;
-        }
-        .product-card-actions .btn { 
-            padding: 0.5rem 0.8rem; 
-            font-size: 0.8rem; 
-            flex-grow: 1;
-        }
-        .product-card-actions .icon-btn { 
-            font-size: 1.2rem; 
-            background: var(--background-color);
-            color: var(--subtle-text-color); 
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            width: 40px; 
-            height: 40px;
-            transition: background-color 0.2s, color 0.2s;
-        }
-        .product-card-actions .icon-btn:hover {
-            background-color: var(--border-color);
-        }
-        .icon-btn.wishlist-btn.active {
-            color: var(--danger-color); 
-            border-color: var(--danger-color);
-        }
+        .product-card-title { font-size: 1rem; font-weight: 600; margin-bottom: 0.25rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .product-card-price { font-size: 1.2rem; font-weight: 700; color: var(--primary-color); margin-bottom: 0.75rem; }
+        .product-card-actions { margin-top: auto; display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; }
+        .product-card-actions .btn { padding: 0.5rem 0.8rem; font-size: 0.8rem; flex-grow: 1; }
+        .product-card-actions .icon-btn { font-size: 1.2rem; background: var(--background-color); color: var(--subtle-text-color); border: 1px solid var(--border-color); border-radius: 8px; width: 40px; height: 40px; transition: background-color 0.2s, color 0.2s; }
+        .product-card-actions .icon-btn:hover { background-color: var(--border-color); }
+        .icon-btn.wishlist-btn.active { color: var(--danger-color); border-color: var(--danger-color); }
         .icon-btn.wishlist-btn.active i { color: var(--danger-color); }
 
         /* --- Cart Page --- */
@@ -246,17 +141,9 @@
         .cart-item-price { font-weight: 500; color: var(--primary-color); font-size: 0.9rem; }
         .cart-item-actions { display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; height: 80px; }
         .quantity-control { display: flex; align-items: center; gap: 0.75rem; }
-        .quantity-btn { 
-            background: var(--background-color); 
-            color: var(--text-color); 
-            border: 1px solid var(--border-color);
-            width: 28px; height: 28px; border-radius: 4px; 
-            cursor: pointer; font-weight: bold; 
-            transition: background-color 0.2s;
-        }
+        .quantity-btn { background: var(--background-color); color: var(--text-color); border: 1px solid var(--border-color); width: 28px; height: 28px; border-radius: 4px; cursor: pointer; font-weight: bold; transition: background-color 0.2s; }
         .quantity-btn:hover { background-color: var(--border-color); }
         .quantity-display { width: 20px; text-align: center; font-weight: 600; }
-
         .remove-item-btn { background: none; border: none; color: var(--danger-color); cursor: pointer; font-size: 0.8rem; font-weight: 500; padding: 0; }
         #cart-summary { background: var(--surface-color); border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 12px var(--shadow-color); }
         #cart-summary h3 { font-size: 1.2rem; font-weight: 600; margin-bottom: 1rem; }
@@ -264,22 +151,14 @@
         .summary-row span:last-child { font-weight: 600; }
         #checkout-btn { width: 100%; margin-top: 1rem; }
 
-        /* --- Orders Page Item FIX --- */
-        .order-item { 
-            background: var(--surface-color); 
-            border-radius: 12px; 
-            padding: 1rem; 
-            box-shadow: 0 4px 12px var(--shadow-color); 
-            margin-bottom: 1rem; 
-            border-left: 5px solid var(--primary-color);
-        }
+        /* --- Orders Page Item --- */
+        .order-item { background: var(--surface-color); border-radius: 12px; padding: 1rem; box-shadow: 0 4px 12px var(--shadow-color); margin-bottom: 1rem; border-left: 5px solid var(--primary-color); }
         .order-header { display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-weight: 600;}
         .order-id { font-size: 0.9rem; color: var(--subtle-text-color); }
         .order-total { font-size: 1.1rem; color: var(--primary-color); }
         .order-details ul { list-style: none; padding: 0; margin-top: 0.5rem; border-top: 1px dashed var(--border-color); padding-top: 0.5rem; }
         .order-details li { font-size: 0.9rem; margin-bottom: 0.25rem; }
         .order-status { font-style: italic; color: var(--success-color); font-weight: 500; margin-top: 0.5rem;}
-
 
         /* --- General UI & Helpers --- */
         .empty-state { text-align: center; padding: 4rem 2rem; background: var(--surface-color); border-radius: 12px; }
@@ -290,82 +169,20 @@
         .modal.active { display: flex; animation: fadeIn 0.3s; }
         .modal-content { background-color: var(--surface-color); padding: 2rem; border-radius: 12px; width: 90%; max-width: 500px; position: relative; animation: modalZoomIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); margin: 3rem 0; }
         
-        /* 🔥 NEW & MODIFIED: Product Detail Modal & Image Slider Styles 🔥 */
+        /* --- Product Detail Modal & Slider --- */
         #product-detail-modal .modal-content { max-width: 700px; padding: 0; }
         .pdp-container { padding: 1.5rem; }
-        
-        /* Image Slider Container */
-        .pdp-image-slider {
-            position: relative;
-            width: 100%;
-            height: 300px;
-            overflow: hidden;
-            border-radius: 12px 12px 0 0;
-            background-color: var(--border-color);
-        }
-        /* Hide controls if only one image */
-        .pdp-image-slider.single-image .slider-btn,
-        .pdp-image-slider.single-image .slider-pagination {
-            display: none;
-        }
-
-        .pdp-slider-wrapper {
-            display: flex;
-            height: 100%;
-            transition: transform 0.4s ease-in-out;
-        }
-
-        .pdp-slider-wrapper img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            flex-shrink: 0;
-        }
-
-        .slider-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: rgba(0, 0, 0, 0.4);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            z-index: 10;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+        .pdp-image-slider { position: relative; width: 100%; height: 300px; overflow: hidden; border-radius: 12px 12px 0 0; background-color: var(--border-color); }
+        .pdp-image-slider.single-image .slider-btn, .pdp-image-slider.single-image .slider-pagination { display: none; }
+        .pdp-slider-wrapper { display: flex; height: 100%; transition: transform 0.4s ease-in-out; }
+        .pdp-slider-wrapper img { width: 100%; height: 100%; object-fit: cover; flex-shrink: 0; }
+        .slider-btn { position: absolute; top: 50%; transform: translateY(-50%); background-color: rgba(0, 0, 0, 0.4); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 1.2rem; cursor: pointer; transition: background-color 0.2s; z-index: 10; display: flex; justify-content: center; align-items: center; }
         .slider-btn:hover { background-color: rgba(0, 0, 0, 0.7); }
         .slider-btn.prev { left: 10px; }
         .slider-btn.next { right: 10px; }
-
-        .slider-pagination {
-            position: absolute;
-            bottom: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 8px;
-            z-index: 10;
-        }
-        .slider-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background-color: rgba(255, 255, 255, 0.5);
-            cursor: pointer;
-            transition: background-color 0.2s, transform 0.2s;
-        }
-        .slider-dot.active {
-            background-color: white;
-            transform: scale(1.2);
-        }
-        /* End of Image Slider Styles */
+        .slider-pagination { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 10; }
+        .slider-dot { width: 10px; height: 10px; border-radius: 50%; background-color: rgba(255, 255, 255, 0.5); cursor: pointer; transition: background-color 0.2s, transform 0.2s; }
+        .slider-dot.active { background-color: white; transform: scale(1.2); }
 
         .pdp-title { font-size: 1.8rem; font-weight: 700; margin: 1rem 0 0.5rem; }
         .pdp-price { font-size: 2.2rem; font-weight: 800; color: var(--danger-color); margin-bottom: 1rem; }
@@ -373,123 +190,41 @@
         .pdp-actions { display: flex; gap: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-color); }
         .pdp-actions .btn { flex-grow: 1; }
         .pdp-actions .icon-btn { width: 50px; height: 50px; flex-shrink: 0; }
-
-
         .close-btn { position: absolute; top: 1rem; right: 1rem; font-size: 1.5rem; cursor: pointer; transition: color 0.2s; z-index: 10; }
         .close-btn:hover { color: var(--danger-color); }
         
-        /* Payment Modal Specific Styles */
-        #payment-modal .modal-content { max-width: 400px; height: 700; text-align: center; top: 50px;}
-        /* FIX: Constrains the QR code image size */
-        #payment-modal img { 
-            width: 100%; 
-            max-width: 250px; /* Reduced max-width for better fit */
-            height: auto; 
-            aspect-ratio: 1 / 1; 
-            object-fit: contain; 
-            border-radius: 16px; 
-            margin: 1.5rem auto 1rem; 
-            display: block; 
-            box-shadow: 0 4px 12px var(--shadow-color); 
-        }
-        #payment-total { font-size: 1.8rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--primary-color); }
+        /* --- Payment Modal Specific --- */
+        #payment-modal .modal-content { max-width: 400px; top: 20px; max-height: 90vh; overflow-y: auto; }
+        #payment-modal img { width: 100%; max-width: 200px; height: auto; border-radius: 16px; margin: 1rem auto; display: block; box-shadow: 0 4px 12px var(--shadow-color); }
+        #payment-total { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--primary-color); text-align: center; }
 
-        /* =================================================================
-           🔥 NEW: CHAT MODAL STYLES
-           ================================================================= */
-        #chat-modal .modal-content {
-            height: 70vh;
-            max-height: 600px;
-            width: 90%;
-            max-width: 400px;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-        .chat-header {
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid var(--border-color);
-            font-weight: 600;
-            font-size: 1.1rem;
-            flex-shrink: 0;
-        }
-        .chat-messages {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding: 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-        .chat-message {
-            padding: 0.6rem 1rem;
-            border-radius: 18px;
-            max-width: 80%;
-            line-height: 1.4;
-        }
-        .chat-message.user {
-            background-color: var(--primary-color);
-            color: white;
-            align-self: flex-end;
-            border-bottom-right-radius: 4px;
-        }
-        .chat-message.admin {
-            background-color: var(--border-color);
-            color: var(--text-color);
-            align-self: flex-start;
-            border-bottom-left-radius: 4px;
-        }
-        .chat-message .timestamp {
-            font-size: 0.7rem;
-            display: block;
-            margin-top: 4px;
-            text-align: right;
-            opacity: 0.7;
-        }
-        .chat-input-area {
-            display: flex;
-            padding: 1rem;
-            border-top: 1px solid var(--border-color);
-            gap: 0.5rem;
-            background-color: var(--surface-color);
-        }
-        .chat-input-area input {
-            flex-grow: 1;
-        }
-        .chat-input-area button {
-            width: auto; /* Override default button width */
-            flex-shrink: 0;
-        }
+        /* --- Chat Modal Styles --- */
+        #chat-modal .modal-content { height: 70vh; max-height: 600px; width: 90%; max-width: 400px; padding: 0; display: flex; flex-direction: column; overflow: hidden; }
+        .chat-header { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); font-weight: 600; font-size: 1.1rem; flex-shrink: 0; background-color: var(--surface-color); }
+        .chat-messages { flex-grow: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem; background-color: var(--background-color); }
+        .chat-message { padding: 0.6rem 1rem; border-radius: 18px; max-width: 80%; line-height: 1.4; }
+        .chat-message.user { background-color: var(--primary-color); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+        .chat-message.admin { background-color: var(--border-color); color: var(--text-color); align-self: flex-start; border-bottom-left-radius: 4px; }
+        .chat-message .timestamp { font-size: 0.7rem; display: block; margin-top: 4px; text-align: right; opacity: 0.7; }
+        .chat-input-area { display: flex; padding: 1rem; border-top: 1px solid var(--border-color); gap: 0.5rem; background-color: var(--surface-color); }
+        .chat-input-area input { flex-grow: 1; }
+        .chat-input-area button { width: auto; flex-shrink: 0; }
 
-
+        /* --- Loader & Toast --- */
         #loader { display: none; position: fixed; z-index: 4000; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.7); justify-content: center; align-items: center; }
         #loader.active { display: flex; }
         .spinner { width: 50px; height: 50px; border: 5px solid var(--border-color); border-top-color: var(--primary-color); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        
         #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; }
         .toast { padding: 1rem 1.5rem; margin-bottom: 1rem; border-radius: 8px; color: white; font-weight: 500; box-shadow: 0 4px 12px var(--shadow-color); display: flex; align-items: center; gap: 1rem; transform: translateX(120%); animation: slideIn 0.5s forwards; }
         @keyframes slideIn { to { transform: translateX(0); } }
 
-        /* --- Search Overlay FIX --- */
-        #search-overlay { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: var(--background-color); 
-            z-index: 1100; transform: translateY(-100%); 
-            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); 
-            display: flex; flex-direction: column; 
-            padding: 1.5rem; 
-        }
+        /* --- Search Overlay --- */
+        #search-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--background-color); z-index: 1100; transform: translateY(-100%); transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); display: flex; flex-direction: column; padding: 1.5rem; }
         #search-overlay.active { transform: translateY(0); }
         .search-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
         #close-search { font-size: 1.5rem; cursor: pointer; }
-        #search-input { 
-            flex-grow: 1; font-size: 1.2rem; border: none; background: none; 
-            border-bottom: 2px solid var(--primary-color); /* Made search line clearer */
-            padding: 0.5rem 0; 
-            outline: none; color: var(--text-color); 
-        }
+        #search-input { flex-grow: 1; font-size: 1.2rem; border: none; background: none; border-bottom: 2px solid var(--primary-color); padding: 0.5rem 0; outline: none; color: var(--text-color); }
         #search-results-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; overflow-y: auto; padding-top: 0.5rem; }
     </style>
 </head>
@@ -509,7 +244,7 @@
     <div id="auth-modal" class="modal"></div>
     <div id="payment-modal" class="modal"></div>
     <div id="product-detail-modal" class="modal"></div>
-    <div id="chat-modal" class="modal"></div> <!-- 🔥 NEW: Chat Modal -->
+    <div id="chat-modal" class="modal"></div>
 
     <div id="store-view" style="display: none;">
         <header>
@@ -576,10 +311,6 @@
 
     <script type="module">
         // =================================================================
-        // 🔥 JAVASCRIPT LOGIC (FIX FOR FIREBASE ORDERS) 🔥
-        // =================================================================
-
-        // =================================================================
         // 🔥🔥🔥 PASTE YOUR FIREBASE CONFIGURATION CODE HERE 🔥🔥🔥
         // =================================================================
         const firebaseConfig = {
@@ -598,7 +329,7 @@
         const auth = firebase.auth();
         const db = firebase.database();
         const CURRENCY = 'रू';
-        const SHIPPING_COST = 120.00;
+        let shippingCost = 120; // Default Shipping
         const DEFAULT_IMAGE = 'https://via.placeholder.com/300x160?text=SubhaShree';
 
         let products = [], currentUser = null, userWishlist = [], userCart = [], userOrders = []; 
@@ -613,16 +344,9 @@
             toast.style.backgroundColor = type === 'success' ? '#2ecc71' : '#e74c3c';
             const icon = type === 'success' ? 'fa-check-circle' : 'fa-times-circle';
             toast.innerHTML = `<i class="fas ${icon}"></i><span>${message}</span>`;
-            
             toastContainer.appendChild(toast);
-            setTimeout(() => {
-                toast.style.transform = 'translateX(0)';
-            }, 10);
-            
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                setTimeout(() => toast.remove(), 500);
-            }, 3000);
+            setTimeout(() => { toast.style.transform = 'translateX(0)'; }, 10);
+            setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 500); }, 3000);
         };
         
         const observer = new IntersectionObserver((entries) => {
@@ -641,7 +365,6 @@
                 auth.onAuthStateChanged(async (user) => {
                     if (user) {
                         currentUser = user;
-                        // In a real app, we'd merge data here. For this context, we just load.
                         loadUserData(user.uid);
                     } else {
                         currentUser = null;
@@ -670,17 +393,8 @@
         };
 
         const loadUserData = (uid) => {
-            // Load Cart
-            db.ref(`users/${uid}/cart`).once('value', snap => {
-                userCart = snap.val() ? Object.values(snap.val()) : [];
-                updateBadges(); if(window.location.hash === '#cart') renderCart();
-            });
-            // Load Wishlist
-            db.ref(`users/${uid}/wishlist`).once('value', snap => {
-                userWishlist = snap.val() ? Object.values(snap.val()) : [];
-                updateBadges(); if(window.location.hash === '#wishlist') renderWishlist();
-            });
-            // Load Orders
+            db.ref(`users/${uid}/cart`).once('value', snap => { userCart = snap.val() ? Object.values(snap.val()) : []; updateBadges(); if(window.location.hash === '#cart') renderCart(); });
+            db.ref(`users/${uid}/wishlist`).once('value', snap => { userWishlist = snap.val() ? Object.values(snap.val()) : []; updateBadges(); if(window.location.hash === '#wishlist') renderWishlist(); });
             db.ref(`orders`).orderByChild('userId').equalTo(uid).on('value', snap => {
                 const ordersObject = snap.val();
                 userOrders = ordersObject ? Object.keys(ordersObject).map(key => ({...ordersObject[key], id: key})) : [];
@@ -689,51 +403,28 @@
             });
         };
 
-
         // --- ROUTING ---
         const handleRouteChange = () => {
             const hash = window.location.hash || '#home';
             const pageId = hash.substring(1);
-            
             document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
             document.querySelectorAll('.nav-link, .bottom-nav-link').forEach(l => l.classList.remove('active'));
-            
             const activePage = document.getElementById(`${pageId}-page`);
-            if (activePage) {
-                activePage.style.display = 'block';
-                activePage.classList.add('active');
-            }
-            
+            if (activePage) { activePage.style.display = 'block'; activePage.classList.add('active'); }
             document.querySelectorAll(`[href="${hash}"]`).forEach(l => l.classList.add('active'));
-
-            const pageRenderFunctions = { 
-                '#home': () => renderProducts(products, 'product-grid'), 
-                '#wishlist': renderWishlist, 
-                '#cart': renderCart, 
-                '#orders': renderOrders, // Ensure renderOrders is called
-                '#profile': renderProfile 
-            };
-            
-            if (pageRenderFunctions[hash]) {
-                pageRenderFunctions[hash]();
-            } else if (hash === '#profile') {
-                // Render profile even if it's the default route to ensure login state is shown
-                renderProfile();
-            }
+            const pageRenderFunctions = { '#home': () => renderProducts(products, 'product-grid'), '#wishlist': renderWishlist, '#cart': renderCart, '#orders': renderOrders, '#profile': renderProfile };
+            if (pageRenderFunctions[hash]) { pageRenderFunctions[hash](); } 
+            else if (hash === '#profile') { renderProfile(); }
         };
 
         // --- PRODUCT & DATA LOGIC ---
         const fetchProducts = () => {
             return new Promise((resolve) => {
-                // Added 'description' for the new PDP feature
                 const dummyProducts = [
-                    { id: 'p1', name: 'Premium Nepali Coffee Beans', price: 950, image: 'https://images.unsplash.com/photo-1510443900762-b92429403d15?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1ODc0NTZ8MHwxfHNlYXJjaHwxfHxOZXBhbGklMjBDb2ZmZWUlMjBCZWFuc3xlbnwwfHx8fDE3MDA2NjczNDB8MA&lib=rb-4.0.3&q=80&w=400', description: 'Finest Arabica beans sourced directly from the high-altitude farms of Nepal. Known for its rich aroma and balanced, subtle fruity notes.' },
-                    { id: 'p2', name: 'Handmade Pashmina Shawl', price: 5500, image: 'https://images.unsplash.com/photo-1627883262335-ee178d8a7356?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1ODc0NTZ8MHwxfHxQYXNobWluYSUyMFNoYXdsfGVufDB8fHx8MTcwMDY2NzU0MXww&lib=rb-4.0.3&q=80&w=400', description: 'Luxuriously soft and warm shawl, meticulously hand-woven from the highest quality Himalayan goat wool. A timeless piece of elegance.' },
-                    { id: 'p3', name: 'Mount Everest T-Shirt (Organic)', price: 1200, image: 'https://images.unsplash.com/photo-1543087903-1ac2ec7ba8c5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1ODc0NTZ8MHwxfHNlYXJjaHwxfHxNb3VudCUyMEVlcnJldCUyMFQtU2hpcnR8ZW58MHx8fHwxNzAwNjY3NTg4fDA&lib=rb-4.0.3&q=80&w=400', description: 'Comfortable, 100% organic cotton T-shirt with a minimalist Everest graphic. Eco-friendly and ethically produced.' },
-                    { id: 'p4', name: 'Khukuri Knife (Ornamental)', price: 3800, image: 'https://images.unsplash.com/photo-1627883262335-ee178d8a7356?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1ODc0NTZ8MHwxfHxLaHVrdXJpJTIwS25pZmV8ZW58MHx8fHwxNzAwNjY3NjE2fDA&lib=rb-4.0.3&q=80&w=400', description: 'A beautifully crafted, non-functional Khukuri, perfect as a display piece or souvenir. Represents Gurkha pride and heritage.' },
-                    { id: 'p5', name: 'Almond & Honey Soap', price: 65, image: 'https://images.unsplash.com/photo-1627883262335-ee178d8a7356?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1ODc0NTZ8MHwxfHxzZWFc2hpbnVuaW5nfGVufDB8fHx8MTcwMDY2NzU0MXww&lib=rb-4.0.3&q=80&w=400', description: 'Natural, moisturizing soap enriched with pure almond oil and organic Nepali honey. Gently cleanses and nourishes the skin.' },
+                    { id: 'p1', name: 'Premium Nepali Coffee Beans', price: 950, image: 'https://images.unsplash.com/photo-1510443900762-b92429403d15?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1ODc0NTZ8MHwxfHNlYXJjaHwxfHxOZXBhbGklMjBDb2ZmZWUlMjBCZWFuc3xlbnwwfHx8fDE3MDA2NjczNDB8MA&lib=rb-4.0.3&q=80&w=400', description: 'Finest Arabica beans sourced directly from the high-altitude farms of Nepal.' },
+                    { id: 'p2', name: 'Handmade Pashmina Shawl', price: 5500, image: 'https://images.unsplash.com/photo-1627883262335-ee178d8a7356?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1ODc0NTZ8MHwxfHxQYXNobWluYSUyMFNoYXdsfGVufDB8fHx8MTcwMDY2NzU0MXww&lib=rb-4.0.3&q=80&w=400', description: 'Luxuriously soft and warm shawl, meticulously hand-woven from the highest quality Himalayan goat wool.' },
+                    { id: 'p3', name: 'Mount Everest T-Shirt (Organic)', price: 1200, image: 'https://images.unsplash.com/photo-1543087903-1ac2ec7ba8c5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1ODc0NTZ8MHwxfHNlYXJjaHwxfHxNb3VudCUyMEVlcnJldCUyMFQtU2hpcnR8ZW58MHx8fHwxNzAwNjY3NTg4fDA&lib=rb-4.0.3&q=80&w=400', description: 'Comfortable, 100% organic cotton T-shirt with a minimalist Everest graphic.' }
                 ];
-                
                 db.ref('products').once('value', (snapshot) => {
                     const fetchedProducts = snapshot.exists() ? Object.keys(snapshot.val()).map(key => ({ id: key, ...snapshot.val()[key] })) : [];
                     products = fetchedProducts.length > 0 ? fetchedProducts : dummyProducts;
@@ -745,246 +436,146 @@
         const renderProducts = (productsToRender, gridId) => {
             const grid = document.getElementById(gridId);
             if (!grid) return;
-            
             grid.innerHTML = '';
             if (productsToRender.length === 0) {
                 grid.innerHTML = `<div class="empty-state" style="grid-column: 1 / -1;"><i class="fas fa-box-open"></i><p>No products found.</p></div>`;
                 return;
             }
-
             productsToRender.forEach((product, index) => {
                 const isWishlisted = userWishlist.some(item => item.id === product.id);
-                
-                // **** IMPROVED IMAGE PATH LOGIC ****
                 const imageSource = product.imageUrl || product.image;
                 const imageUrl = imageSource && imageSource.startsWith('http') ? imageSource : DEFAULT_IMAGE;
-
                 grid.innerHTML += `
                     <div class="product-card" data-id="${product.id}" data-index="${index}">
-                        <img src="${imageUrl}" 
-                             alt="${product.name}" 
-                             class="product-card-img"
-                             onerror="this.onerror=null;this.src='${DEFAULT_IMAGE}';">
-                        
+                        <img src="${imageUrl}" alt="${product.name}" class="product-card-img" onerror="this.onerror=null;this.src='${DEFAULT_IMAGE}';">
                         <div class="product-card-body">
                             <h3 class="product-card-title">${product.name}</h3>
                             <p class="product-card-price">${CURRENCY}${(product.price || 0).toFixed(2)}</p>
                             <div class="product-card-actions">
-                                <button class="icon-btn wishlist-btn ${isWishlisted ? 'active' : ''}" data-id="${product.id}">
-                                    <i class="fas fa-heart"></i>
-                                </button>
-                                <button class="btn btn-primary add-to-cart-btn" data-id="${product.id}">
-                                    <i class="fas fa-shopping-cart"></i> Add
-                                </button>
+                                <button class="icon-btn wishlist-btn ${isWishlisted ? 'active' : ''}" data-id="${product.id}"><i class="fas fa-heart"></i></button>
+                                <button class="btn btn-primary add-to-cart-btn" data-id="${product.id}"><i class="fas fa-shopping-cart"></i> Add</button>
                             </div>
                         </div>
-                    </div>
-                `;
+                    </div>`;
             });
-            
             document.querySelectorAll('.product-card').forEach(card => observer.observe(card));
-
-            // 🔥 NEW: Attach click listener for PDP
-            document.querySelectorAll('.product-card').forEach(card => {
-                // Ensure clicking the buttons inside doesn't trigger the modal
-                card.removeEventListener('click', handleProductCardClick);
-                card.addEventListener('click', handleProductCardClick);
-            });
+            document.querySelectorAll('.product-card').forEach(card => { card.removeEventListener('click', handleProductCardClick); card.addEventListener('click', handleProductCardClick); });
         };
         
-        // 🔥 NEW: Event handler for product card click
         const handleProductCardClick = (e) => {
-            // Prevent opening PDP if an action button (cart/wishlist) was clicked
-            if (e.target.closest('.add-to-cart-btn') || e.target.closest('.wishlist-btn')) {
-                return;
-            }
-            
+            if (e.target.closest('.add-to-cart-btn') || e.target.closest('.wishlist-btn')) { return; }
             const card = e.currentTarget;
-            const productId = card.dataset.id;
-            renderProductDetailModal(productId);
+            renderProductDetailModal(card.dataset.id);
         };
 
-        const getProductDetails = (productId) => {
-            return products.find(p => p.id === productId);
-        }
+        const getProductDetails = (productId) => { return products.find(p => p.id === productId); }
 
         const updateBadges = () => {
             const cartCount = userCart.reduce((sum, item) => sum + item.quantity, 0);
             const wishlistCount = userWishlist.length;
-
             const updateBadge = (id, count) => {
                 const badge = document.getElementById(id);
-                if (badge) {
-                    badge.textContent = count;
-                    badge.classList.toggle('visible', count > 0);
-                }
+                if (badge) { badge.textContent = count; badge.classList.toggle('visible', count > 0); }
             };
-
             updateBadge('cart-badge-mobile', cartCount);
             updateBadge('wishlist-badge-mobile', wishlistCount);
         };
         
-        // 🔥 MODIFIED: Render Product Detail Modal to include image slider
         const renderProductDetailModal = (productId) => {
             const product = getProductDetails(productId);
             if (!product) return;
-            
             const modal = document.getElementById('product-detail-modal');
             const isWishlisted = userWishlist.some(item => item.id === product.id);
-            
-            // Collect all available image URLs
             const imageUrls = [product.imageUrl || product.image];
             if (product.imageUrl2) imageUrls.push(product.imageUrl2);
             if (product.imageUrl3) imageUrls.push(product.imageUrl3);
             if (product.imageUrl4) imageUrls.push(product.imageUrl4);
-            
-            // Generate HTML for image slides and pagination dots
             const slidesHtml = imageUrls.map(url => `<img src="${url || DEFAULT_IMAGE}" alt="${product.name}">`).join('');
             const dotsHtml = imageUrls.map((_, index) => `<div class="slider-dot ${index === 0 ? 'active' : ''}" data-index="${index}"></div>`).join('');
-
             modal.innerHTML = `
                 <div class="modal-content">
                     <i class="fas fa-times close-btn" onclick="document.getElementById('product-detail-modal').classList.remove('active')"></i>
-                    
                     <div class="pdp-image-slider ${imageUrls.length <= 1 ? 'single-image' : ''}">
                         <div class="pdp-slider-wrapper">${slidesHtml}</div>
                         <button class="slider-btn prev"><i class="fas fa-chevron-left"></i></button>
                         <button class="slider-btn next"><i class="fas fa-chevron-right"></i></button>
                         <div class="slider-pagination">${dotsHtml}</div>
                     </div>
-
                     <div class="pdp-container">
                         <h2 class="pdp-title">${product.name}</h2>
                         <p class="pdp-price">${CURRENCY}${(product.price || 0).toFixed(2)}</p>
-                        <p class="pdp-description">${product.description || 'No detailed description available for this product.'}</p>
-                        
+                        <p class="pdp-description">${product.description || 'No detailed description available.'}</p>
                         <div class="pdp-actions">
-                            <button class="icon-btn wishlist-btn ${isWishlisted ? 'active' : ''}" data-id="${product.id}" onclick="toggleWishlist('${product.id}'); this.classList.toggle('active')">
-                                <i class="fas fa-heart"></i>
-                            </button>
-                            <button class="btn btn-primary add-to-cart-btn" data-id="${product.id}" onclick="addToCart('${product.id}'); document.getElementById('product-detail-modal').classList.remove('active');">
-                                <i class="fas fa-shopping-cart"></i> Add to Cart
-                            </button>
+                            <button class="icon-btn wishlist-btn ${isWishlisted ? 'active' : ''}" data-id="${product.id}" onclick="toggleWishlist('${product.id}'); this.classList.toggle('active')"><i class="fas fa-heart"></i></button>
+                            <button class="btn btn-primary add-to-cart-btn" data-id="${product.id}" onclick="addToCart('${product.id}'); document.getElementById('product-detail-modal').classList.remove('active');"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
                         </div>
                     </div>
-                </div>
-            `;
+                </div>`;
             modal.classList.add('active');
-            
-            // Initialize the slider logic if there's more than one image
-            if (imageUrls.length > 1) {
-                setupProductImageSlider();
-            }
+            if (imageUrls.length > 1) { setupProductImageSlider(); }
         };
 
-        // 🔥 NEW: Function to control the image slider in the product detail modal
         const setupProductImageSlider = () => {
             const slider = document.querySelector('.pdp-image-slider');
             if (!slider) return;
-
             const wrapper = slider.querySelector('.pdp-slider-wrapper');
             const prevBtn = slider.querySelector('.slider-btn.prev');
             const nextBtn = slider.querySelector('.slider-btn.next');
             const dots = slider.querySelectorAll('.slider-dot');
             const totalSlides = dots.length;
             let currentIndex = 0;
-
             const goToSlide = (index) => {
                 if (index < 0) index = totalSlides - 1;
                 if (index >= totalSlides) index = 0;
-
                 wrapper.style.transform = `translateX(-${index * 100}%)`;
                 dots.forEach(dot => dot.classList.remove('active'));
                 dots[index].classList.add('active');
                 currentIndex = index;
             };
-
             prevBtn.addEventListener('click', () => goToSlide(currentIndex - 1));
             nextBtn.addEventListener('click', () => goToSlide(currentIndex + 1));
-            dots.forEach(dot => {
-                dot.addEventListener('click', () => goToSlide(parseInt(dot.dataset.index)));
-            });
+            dots.forEach(dot => { dot.addEventListener('click', () => goToSlide(parseInt(dot.dataset.index))); });
         };
 
-        // --- CART & WISHLIST LOGIC ---
-        
         const saveCart = () => {
-            // Save to localStorage for guest users
-            if (!currentUser) {
-                localStorage.setItem('cart', JSON.stringify(userCart));
-            } 
-            // Save to Firebase for logged in users (simple overwrite)
+            if (!currentUser) { localStorage.setItem('cart', JSON.stringify(userCart)); } 
             else { db.ref(`users/${currentUser.uid}/cart`).set(userCart); }
         };
         
-        // 🔥 FIX: Corrected function to ensure the product image property is retrieved correctly
         const addToCart = (productId) => { 
             const product = getProductDetails(productId);
-            if (!product) {
-                return showToast('Error: Product not found.', 'error');
-            }
-            
+            if (!product) return showToast('Error: Product not found.', 'error');
             const existingItem = userCart.find(item => item.id === productId);
-            if (existingItem) {
-                existingItem.quantity += 1;
-                showToast('Quantity increased in cart!', 'success');
-            } else {
-                userCart.push({ 
-                    id: product.id, 
-                    name: product.name, 
-                    price: product.price, 
-                    // Use the correct image property for cart storage
-                    image: product.imageUrl || product.image, 
-                    quantity: 1 
-                });
-                showToast('Added to cart!', 'success'); 
-            }
-            saveCart();
-            updateBadges();
-            if(window.location.hash === '#cart') renderCart();
-            // Re-render home page to update wishlist status on cards
-            if(window.location.hash === '#home') renderProducts(products, 'product-grid');
+            if (existingItem) { existingItem.quantity += 1; showToast('Quantity increased!', 'success'); } 
+            else { userCart.push({ id: product.id, name: product.name, price: product.price, image: product.imageUrl || product.image, quantity: 1 }); showToast('Added to cart!', 'success'); }
+            saveCart(); updateBadges(); if(window.location.hash === '#cart') renderCart();
         };
 
         const updateCartItemQuantity = (productId, change) => {
             const item = userCart.find(item => item.id === productId);
             if (item) {
                 item.quantity += change;
-                if (item.quantity <= 0) {
-                    userCart = userCart.filter(i => i.id !== productId);
-                    showToast('Item removed from cart.', 'error');
-                } else {
-                    showToast('Cart updated!', 'success');
-                }
-                saveCart();
-                updateBadges();
-                renderCart(); 
+                if (item.quantity <= 0) { userCart = userCart.filter(i => i.id !== productId); showToast('Item removed.', 'error'); }
+                saveCart(); updateBadges(); renderCart(); 
             }
         };
 
         const removeCartItem = (productId) => {
             userCart = userCart.filter(i => i.id !== productId);
-            saveCart();
-            updateBadges();
-            renderCart();
-            showToast('Item permanently removed.', 'error');
+            saveCart(); updateBadges(); renderCart(); showToast('Item removed.', 'error');
         };
 
         const renderCart = () => { 
             const container = document.getElementById('cart-items');
             const summary = document.getElementById('cart-summary');
-            
             const cartItemCount = userCart.reduce((sum, item) => sum + item.quantity, 0);
             const cartSubtotal = userCart.reduce((sum, item) => sum + (item.price || 0) * item.quantity, 0);
             const isCartEmpty = cartItemCount === 0;
-            // Shipping is charged only if the cart is not empty
-            const finalShipping = isCartEmpty ? 0 : SHIPPING_COST;
-            const total = cartSubtotal + finalShipping;
+            // Shipping is now dynamic, just show "Calculated at checkout" here or default
+            const total = cartSubtotal; // + shippingCost (calculated in modal)
 
-            // --- Render Cart Items ---
-            if (isCartEmpty) {
-                container.innerHTML = `<div class="empty-state"><i class="fas fa-shopping-cart"></i><p>Your cart is empty.</p></div>`;
-            } else {
+            if (isCartEmpty) { container.innerHTML = `<div class="empty-state"><i class="fas fa-shopping-cart"></i><p>Your cart is empty.</p></div>`; } 
+            else {
                 container.innerHTML = userCart.map(item => `
                     <div class="cart-item" data-id="${item.id}">
                         <img src="${item.image || DEFAULT_IMAGE}" alt="${item.name}" class="cart-item-img">
@@ -1000,44 +591,26 @@
                             </div>
                             <button class="remove-item-btn" data-id="${item.id}">Remove</button>
                         </div>
-                    </div>
-                `).join('');
+                    </div>`).join('');
             }
-
-            // --- Render Cart Summary ---
             summary.innerHTML = `
                 <h3>Summary</h3>
                 <div class="summary-row"><span>Subtotal (${cartItemCount} items)</span><span>${CURRENCY}${cartSubtotal.toFixed(2)}</span></div>
-                <div class="summary-row"><span>Shipping</span><span>${CURRENCY}${finalShipping.toFixed(2)}</span></div>
+                <div class="summary-row"><span>Shipping</span><span style="font-size:0.9rem; color:var(--primary-color);">Calculated at Checkout</span></div>
                 <hr style="margin: 1rem 0; border-color: var(--border-color);">
-                <div class="summary-row" style="font-size: 1.2rem; font-weight: 700;"><span>Total</span><span id="final-total">${CURRENCY}${total.toFixed(2)}</span></div>
-                <button id="checkout-btn" class="btn btn-primary" ${isCartEmpty ? 'disabled' : ''}>
-                    <i class="fas fa-cash-register"></i> Proceed to Checkout
-                </button>
-            `;
-            
-            // Re-attach event listeners after rendering
+                <button id="checkout-btn" class="btn btn-primary" ${isCartEmpty ? 'disabled' : ''}><i class="fas fa-cash-register"></i> Proceed to Checkout</button>`;
             document.getElementById('checkout-btn')?.addEventListener('click', openPaymentModal);
         };
 
         const toggleWishlist = async (productId) => { 
             const index = userWishlist.findIndex(item => item.id === productId);
-            if (index > -1) {
-                userWishlist = userWishlist.filter(item => item.id !== productId);
-                showToast('Removed from Wishlist.', 'error');
-            } else {
+            if (index > -1) { userWishlist = userWishlist.filter(item => item.id !== productId); showToast('Removed from Wishlist.', 'error'); } 
+            else {
                 const product = getProductDetails(productId);
-                if(product) userWishlist.push({ id: productId, name: product.name });
-                showToast('Added to Wishlist!', 'success');
+                if(product) userWishlist.push({ id: productId, name: product.name }); showToast('Added to Wishlist!', 'success');
             }
-            
-            // Save to local storage (guest) or Firebase (logged in)
-            if (!currentUser) {
-                localStorage.setItem('wishlist', JSON.stringify(userWishlist));
-            } else {
-                db.ref(`users/${currentUser.uid}/wishlist`).set(userWishlist);
-            }
-
+            if (!currentUser) { localStorage.setItem('wishlist', JSON.stringify(userWishlist)); } 
+            else { db.ref(`users/${currentUser.uid}/wishlist`).set(userWishlist); }
             if(window.location.hash === '#wishlist') renderWishlist();
             if(window.location.hash === '#home') renderProducts(products, 'product-grid');
             updateBadges();
@@ -1045,81 +618,62 @@
 
         const renderWishlist = () => { 
             const wishlistContainer = document.getElementById('wishlist-items');
-            
-            if (userWishlist.length === 0) {
-                wishlistContainer.innerHTML = `<div class="empty-state" style="grid-column: 1 / -1;"><i class="fas fa-heart"></i><p>Your wishlist is empty.</p></div>`;
-                return;
-            }
-
-            const wishlistProducts = userWishlist
-                .map(item => getProductDetails(item.id))
-                .filter(p => p); 
-            
+            if (userWishlist.length === 0) { wishlistContainer.innerHTML = `<div class="empty-state" style="grid-column: 1 / -1;"><i class="fas fa-heart"></i><p>Your wishlist is empty.</p></div>`; return; }
+            const wishlistProducts = userWishlist.map(item => getProductDetails(item.id)).filter(p => p); 
             renderProducts(wishlistProducts, 'wishlist-items');
         };
 
-        // 🔥 FIX: Order Placement Logic to save to global 'orders' collection
-        const placeOrder = (transactionId, message) => {
+        // 🔥🔥 SAFE CHECKOUT & ORDER LOGIC 🔥🔥
+        const placeOrder = (transactionId, message, address, phone, finalShipping) => {
             const cartItems = userCart.map(item => ({ ...item })); 
             const subtotal = cartItems.reduce((sum, item) => sum + (item.price || 0) * item.quantity, 0);
-            const total = subtotal + SHIPPING_COST;
+            const total = subtotal + finalShipping;
             
+            const locationType = finalShipping === 120 ? "Inside Valley" : "Out of Valley";
+
             const newOrder = {
-                // id: `ORD-${Date.now()}`, // Not needed, Firebase push key will be the ID
-                date: new Date().toISOString(), // Use ISO string for better sorting
+                date: new Date().toISOString(),
                 status: 'Processing',
                 subtotal: subtotal,
-                shipping: SHIPPING_COST,
+                shipping: finalShipping,
                 total: total,
                 transactionId: transactionId,
                 message: message,
+                address: address + ` (${locationType})`, // Append location type to address
+                phone: phone,
                 items: cartItems,
-                // Add user info if logged in
                 userId: currentUser ? currentUser.uid : 'guest',
                 userEmail: currentUser ? currentUser.email : 'guest'
             };
-
-            // Save to the global 'orders' collection in Firebase for everyone
             db.ref('orders').push(newOrder);
-
-            // Also save a reference for logged-in users if you want them to see their own orders
-            if (currentUser) {
-                // This part is for the user's own order history page
-                db.ref(`users/${currentUser.uid}/orders`).push(newOrder);
-            } else {
-                // For guests, we still save to local storage so they can see their order history
-                userOrders.unshift(newOrder); 
-                localStorage.setItem('orders', JSON.stringify(userOrders));
-            }
-        }
+            if (currentUser) { db.ref(`users/${currentUser.uid}/orders`).push(newOrder); } 
+            else { userOrders.unshift(newOrder); localStorage.setItem('orders', JSON.stringify(userOrders)); }
+        };
         
-        // FIX: Order Render Logic to display orders
         const renderOrders = () => { 
             const container = document.getElementById('orders-list');
-            
-            if (userOrders.length === 0) {
-                container.innerHTML = `<div class="empty-state"><i class="fas fa-receipt"></i><p>No orders placed yet.</p></div>`;
-                return;
-            }
-            
+            if (userOrders.length === 0) { container.innerHTML = `<div class="empty-state"><i class="fas fa-receipt"></i><p>No orders placed yet.</p></div>`; return; }
             container.innerHTML = userOrders.map(order => `
                 <div class="order-item">
                     <div class="order-header">
                         <span>Order ID: <span class="order-id">${order.id ? order.id.substring(order.id.length - 6) : 'N/A'}</span></span>
-                        <span class="order-total">${CURRENCY}${order.total.toFixed(2)}</span>
+                        <span class="order-total">${CURRENCY}${(order.total || 0).toFixed(2)}</span>
                     </div>
                     <div class="order-header">
-                        <span>Date: ${new Date(order.date).toLocaleDateString()}</span>
-                        <span class="order-status" style="color: ${order.status === 'Processing' ? '#f39c12' : '#2ecc71'};">${order.status}</span>
+                        <span>Date: ${order.date ? new Date(order.date).toLocaleDateString() : 'N/A'}</span>
+                        <span class="order-status" style="color: ${order.status === 'Processing' ? '#f39c12' : '#2ecc71'};">${order.status || 'Pending'}</span>
                     </div>
                     <div class="order-details">
-                        <small style="color: var(--subtle-text-color);">Txn ID: ${order.transactionId}</small>
+                        <small style="color: var(--subtle-text-color);">
+                            <i class="fas fa-map-marker-alt"></i> ${order.address || 'N/A'} | <i class="fas fa-phone"></i> ${order.phone || 'N/A'}
+                        </small>
                         <ul>
-                            ${order.items.map(item => `
+                            ${(order.items || []).map(item => `
                                 <li>${item.quantity}x ${item.name} (${CURRENCY}${((item.price || 0) * item.quantity).toFixed(2)})</li>
                             `).join('')}
-                            <li style="font-weight: 500;">Shipping: ${CURRENCY}${order.shipping.toFixed(2)}</li>
+                            <li style="font-weight: 500;">Shipping: ${CURRENCY}${(order.shipping || 0).toFixed(2)}</li>
                         </ul>
+                        ${order.message ? `<div style="margin-top:0.5rem; font-style:italic; font-size:0.9rem; color:#555;">Note: "${order.message}"</div>` : ''}
                     </div>
                 </div>
             `).join('');
@@ -1130,100 +684,60 @@
             if (currentUser) {
                 container.innerHTML = `
                     <div class="profile-container">
-                        <div class="profile-header">
-                            <i class="fas fa-user-circle profile-avatar"></i>
-                            <p id="profile-email">${currentUser.email}</p>
+                        <div class="profile-header" style="text-align:center; margin-bottom:2rem;">
+                            <i class="fas fa-user-circle" style="font-size:4rem; color:var(--primary-color);"></i>
+                            <h3 style="margin-top:0.5rem;">${currentUser.email}</h3>
                         </div>
-                        <div class="profile-actions">
-                             <a href="#orders" class="profile-link">
-                                <i class="fas fa-receipt fa-fw"></i>
-                                <span>My Orders</span>
-                                <i class="fas fa-chevron-right"></i>
-                            </a>
-                            <!-- 🔥 NEW: Message Admin Button -->
-                            <button id="message-admin-btn" class="profile-link" style="margin-top: 1rem; width:100%; text-align: left; background: none; border: none; font-size: 1rem; padding-left: 1rem; color: var(--text-color); cursor:pointer;">
-                                <i class="fas fa-comments fa-fw"></i>
-                                <span>Message Admin</span>
-                                <i class="fas fa-chevron-right" style="float: right; line-height: 1.5;"></i>
-                            </button>
-                            <hr style="margin: 1rem 0;">
-                            <button id="profile-logout-btn" class="btn btn-danger">
-                                <i class="fas fa-sign-out-alt fa-fw"></i>
-                                Logout
-                            </button>
+                        <div class="profile-actions" style="display:flex; flex-direction:column; gap:1rem;">
+                             <button onclick="window.location.hash='#orders'" class="btn" style="background:var(--surface-color); border:1px solid var(--border-color); display:flex; justify-content:space-between;"><span><i class="fas fa-receipt fa-fw"></i> My Orders</span><i class="fas fa-chevron-right"></i></button>
+                            <button id="message-admin-btn" class="btn" style="background:var(--surface-color); border:1px solid var(--border-color); display:flex; justify-content:space-between;"><span><i class="fas fa-comments fa-fw"></i> Message Admin</span><i class="fas fa-chevron-right"></i></button>
+                            <button id="profile-logout-btn" class="btn btn-danger" style="margin-top:1rem;"><i class="fas fa-sign-out-alt fa-fw"></i> Logout</button>
                         </div>
                     </div>`;
             } else {
                 container.innerHTML = `
                     <div class="profile-container">
-                        <div class="profile-header">
-                            <i class="fas fa-user-circle profile-avatar"></i>
-                            <p>You are not logged in.</p>
-                            <p style="font-size: 0.9rem; color: var(--subtle-text-color);">Log in to view your orders and manage your account.</p>
-                        </div>
-                        <div class="profile-actions">
-                            <button id="profile-login-btn" class="btn btn-primary">Login</button>
-                            <button id="profile-register-btn" class="btn" style="margin-top: 0.75rem; background-color: var(--background-color); color: var(--text-color); border: 1px solid var(--border-color);">Register</button>
+                        <div class="profile-header" style="text-align:center; padding:2rem;">
+                            <i class="fas fa-user-circle" style="font-size:4rem; color:var(--subtle-text-color);"></i>
+                            <p style="margin:1rem 0;">Log in to view your orders and manage your account.</p>
+                            <button id="profile-login-btn" class="btn btn-primary">Login / Register</button>
                         </div>
                     </div>`;
             }
         };
 
-        // =================================================================
-        // 🔥 NEW: CHAT LOGIC
-        // =================================================================
-        let chatListener = null; // To hold the Firebase listener
-
+        // ================= CHAT SYSTEM =================
+        let chatListener = null; 
         const openChatModal = () => {
-            if (!currentUser) {
-                showToast('Please log in to chat with the admin.', 'error');
-                return;
-            }
-
+            if (!currentUser) { return showToast('Please log in to chat.', 'error'); }
             const modal = document.getElementById('chat-modal');
             modal.innerHTML = `
                 <div class="modal-content">
                     <i class="fas fa-times close-btn" onclick="document.getElementById('chat-modal').classList.remove('active');"></i>
                     <div class="chat-header">Chat with Admin</div>
-                    <div class="chat-messages" id="chat-messages-container">
-                        <!-- Messages will be loaded here -->
-                    </div>
+                    <div class="chat-messages" id="chat-messages-container"></div>
                     <form class="chat-input-area" id="chat-form">
                         <input type="text" id="chat-message-input" class="form-control" placeholder="Type your message..." required>
                         <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i></button>
                     </form>
-                </div>
-            `;
+                </div>`;
             modal.classList.add('active');
-            
             loadChatMessages();
-            
             document.getElementById('chat-form').addEventListener('submit', handleSendMessage);
         };
         
         const loadChatMessages = () => {
             const messagesContainer = document.getElementById('chat-messages-container');
             const chatRef = db.ref(`chats/${currentUser.uid}/messages`);
-            
-            // Detach any previous listener to avoid duplicates
-            if (chatListener) {
-                chatListener.off();
-            }
-
-            messagesContainer.innerHTML = ''; // Clear previous messages
-            
+            if (chatListener) { chatListener.off(); }
+            messagesContainer.innerHTML = '';
             chatListener = chatRef.orderByChild('timestamp');
             chatListener.on('child_added', (snapshot) => {
                 const message = snapshot.val();
                 const messageEl = document.createElement('div');
-                messageEl.classList.add('chat-message', message.sender); // 'user' or 'admin'
-                messageEl.innerHTML = `
-                    <span>${message.text}</span>
-                    <span class="timestamp">${new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
-                `;
+                messageEl.classList.add('chat-message', message.sender);
+                messageEl.innerHTML = `<span>${message.text}</span><span class="timestamp">${new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>`;
                 messagesContainer.appendChild(messageEl);
-                
-                // Scroll to the bottom
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
             });
         };
@@ -1232,161 +746,122 @@
             e.preventDefault();
             const input = document.getElementById('chat-message-input');
             const messageText = input.value.trim();
-            
             if (messageText && currentUser) {
-                const chatRef = db.ref(`chats/${currentUser.uid}/messages`);
-                
-                const newMessage = {
-                    text: messageText,
-                    sender: 'user', // All messages from app are from 'user'
-                    timestamp: Date.now()
-                };
-                
-                chatRef.push(newMessage);
-                input.value = ''; // Clear input field
+                db.ref(`chats/${currentUser.uid}/messages`).push({ text: messageText, sender: 'user', timestamp: Date.now() });
+                input.value = '';
             }
         };
-        // =================================================================
 
+        // ================= AUTH & PAYMENT MODALS =================
         const openAuthModal = (showRegister = false) => {
             const modal = document.getElementById('auth-modal');
-            const content = `
+            modal.innerHTML = `
                 <div class="modal-content">
                     <i class="fas fa-times close-btn" onclick="document.getElementById('auth-modal').classList.remove('active')"></i>
                     <h2>${showRegister ? 'Create Account' : 'Sign In'}</h2>
                     <form id="${showRegister ? 'register-form' : 'login-form'}" style="margin-top: 1.5rem;">
-                        <div class="form-group">
-                            <i class="fas fa-envelope"></i>
-                            <input type="email" id="${showRegister ? 'reg-email' : 'login-email'}" class="form-control" placeholder="Email Address" required>
-                        </div>
-                        <div class="form-group">
-                            <i class="fas fa-lock"></i>
-                            <input type="password" id="${showRegister ? 'reg-password' : 'login-password'}" class="form-control" placeholder="Password" required>
-                        </div>
-                        ${showRegister ? `
-                            <div class="form-group">
-                                <i class="fas fa-lock"></i>
-                                <input type="password" id="reg-confirm-password" class="form-control" placeholder="Confirm Password" required>
-                            </div>` : ''}
+                        <div class="form-group"><input type="email" id="${showRegister ? 'reg-email' : 'login-email'}" class="form-control" placeholder="Email Address" required></div>
+                        <div class="form-group"><input type="password" id="${showRegister ? 'reg-password' : 'login-password'}" class="form-control" placeholder="Password" required></div>
+                        ${showRegister ? `<div class="form-group"><input type="password" id="reg-confirm-password" class="form-control" placeholder="Confirm Password" required></div>` : ''}
                         <button type="submit" class="btn btn-primary">${showRegister ? 'Register' : 'Login'}</button>
-                        <button type="button" class="btn" style="margin-top: 0.75rem; background-color: var(--background-color); color: var(--text-color); border: 1px solid var(--border-color);" onclick="openAuthModal(${!showRegister})">
-                            ${showRegister ? 'Already have an account? Login' : 'Need an account? Register'}
-                        </button>
+                        <button type="button" class="btn" style="margin-top: 0.75rem; background:none; border:none; color:var(--primary-color); text-decoration:underline;" onclick="openAuthModal(${!showRegister})">${showRegister ? 'Already have an account? Login' : 'Need an account? Register'}</button>
                     </form>
-                </div>
-            `;
-            document.getElementById('auth-modal').innerHTML = content;
+                </div>`;
             modal.classList.add('active');
-            
             document.getElementById('login-form')?.addEventListener('submit', handleLogin);
             document.getElementById('register-form')?.addEventListener('submit', handleRegister);
         };
+
         const handleLogin = async (e) => {
-            e.preventDefault();
-            showLoader();
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            try {
-                await auth.signInWithEmailAndPassword(email, password);
-                document.getElementById('auth-modal').classList.remove('active');
-                showToast('Login successful!');
-            } catch (error) {
-                showToast(`Login failed: ${error.message}`, 'error');
-            } finally {
-                hideLoader();
-            }
+            e.preventDefault(); showLoader();
+            try { await auth.signInWithEmailAndPassword(document.getElementById('login-email').value, document.getElementById('login-password').value); document.getElementById('auth-modal').classList.remove('active'); showToast('Login successful!'); } 
+            catch (error) { showToast(`Login failed: ${error.message}`, 'error'); } finally { hideLoader(); }
         };
 
         const handleRegister = async (e) => {
-            e.preventDefault();
-            showLoader();
-            const email = document.getElementById('reg-email').value;
-            const password = document.getElementById('reg-password').value;
-            const confirmPassword = document.getElementById('reg-confirm-password').value;
-            
-            if (password !== confirmPassword) {
-                hideLoader();
-                return showToast('Passwords do not match.', 'error');
-            }
-            
-            try {
-                await auth.createUserWithEmailAndPassword(email, password);
-                document.getElementById('auth-modal').classList.remove('active');
-                showToast('Registration successful! You are now logged in.');
-            } catch (error) {
-                showToast(`Registration failed: ${error.message}`, 'error');
-            } finally {
-                hideLoader();
-            }
+            e.preventDefault(); showLoader();
+            const pass = document.getElementById('reg-password').value;
+            if (pass !== document.getElementById('reg-confirm-password').value) { hideLoader(); return showToast('Passwords do not match.', 'error'); }
+            try { await auth.createUserWithEmailAndPassword(document.getElementById('reg-email').value, pass); document.getElementById('auth-modal').classList.remove('active'); showToast('Registered successfully!'); } 
+            catch (error) { showToast(`Error: ${error.message}`, 'error'); } finally { hideLoader(); }
         };
         
+        // 🔥🔥 UPDATED PAYMENT MODAL WITH DYNAMIC SHIPPING 🔥🔥
         const openPaymentModal = () => {
-            // FIX: Require login before allowing payment
-            if (!currentUser) {
-                showToast('Please log in to place an order.', 'error');
-                openAuthModal();
-                return;
-            }
-
-            const finalTotal = document.getElementById('final-total')?.textContent || `${CURRENCY}0.00`;
+            if (!currentUser) { showToast('Please log in to place an order.', 'error'); openAuthModal(); return; }
             
+            shippingCost = 120; // Reset to default
+            const subtotal = userCart.reduce((sum, item) => sum + (item.price || 0) * item.quantity, 0);
+            const initialTotal = subtotal + shippingCost;
+
             const modal = document.getElementById('payment-modal');
             modal.innerHTML = `
                 <div class="modal-content">
                     <i class="fas fa-times close-btn" onclick="document.getElementById('payment-modal').classList.remove('active')"></i>
-                    <h2>Complete Your Payment</h2>
-                    <p style="color: var(--subtle-text-color); margin-bottom: 1rem;">
-                        Scan the QR code below to pay via eSewa/Khalti, then fill in the confirmation details.
-                    </p>
-                    <div id="payment-total">${finalTotal}</div>
-                    <img id="qr-code-img" src="https://i.imgur.com/5fLgIEC.jpeg" alt="eSewa QR Code">
+                    <h2 style="text-align:center; margin-bottom:1rem;">Checkout</h2>
                     
-                    <form id="payment-form">
+                    <div id="payment-total" style="font-size:1.8rem; color:var(--primary-color); font-weight:700; text-align:center; margin-bottom:1rem;">
+                        ${CURRENCY}${initialTotal.toFixed(2)}
+                    </div>
+                    <img id="qr-code-img" src="https://i.imgur.com/5fLgIEC.jpeg" alt="QR Code">
+                    
+                    <form id="payment-form" style="margin-top:1rem;">
                         <div class="form-group">
-                            <input type="text" id="transaction-id" class="form-control" placeholder="Enter Transaction ID (Required)" required>
+                            <label>1. Delivery Location (Updates Price)</label>
+                            <div class="radio-group">
+                                <label class="radio-box active" id="opt-valley">
+                                    <input type="radio" name="shippingOpt" value="120" checked> Inside Valley (Rs 120)
+                                </label>
+                                <label class="radio-box" id="opt-out">
+                                    <input type="radio" name="shippingOpt" value="190"> Out of Valley (Rs 190)
+                                </label>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <textarea id="payment-message" class="form-control" placeholder="Optional: Add a message or delivery note"></textarea>
-                        </div>
-                        <button type="submit" id="confirm-payment-btn" class="btn btn-primary" style="margin-top: 1rem;">
-                            Confirm Payment
-                        </button>
+
+                        <div class="form-group"><label>2. Delivery Address</label><input type="text" id="delivery-address" class="form-control" placeholder="City, Street, House No." required></div>
+                        <div class="form-group"><label>3. Phone number</label><input type="tel" id="contact-phone" class="form-control" placeholder="98XXXXXXXX" required></div>
+                        <div class="form-group"><label>Transaction ID</label><input type="text" id="transaction-id" class="form-control" placeholder="e.g. 729XH..." required></div>
+                        <div class="form-group"><label>Any Note?</label><textarea id="payment-message" class="form-control" placeholder="Special instructions..."></textarea></div>
+                        <button type="submit" id="confirm-payment-btn" class="btn btn-primary" style="margin-top: 1rem;">Confirm Order</button>
                     </form>
-                </div>
-            `;
+                </div>`;
             modal.classList.add('active');
             
+            // Logic to update price on radio change
+            const radios = document.querySelectorAll('input[name="shippingOpt"]');
+            radios.forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    shippingCost = parseInt(e.target.value);
+                    const newTotal = subtotal + shippingCost;
+                    document.getElementById('payment-total').innerHTML = `${CURRENCY}${newTotal.toFixed(2)}`;
+                    
+                    // Visual update
+                    document.getElementById('opt-valley').classList.toggle('active', shippingCost === 120);
+                    document.getElementById('opt-out').classList.toggle('active', shippingCost === 190);
+                });
+            });
+
             document.getElementById('payment-form').addEventListener('submit', handlePaymentConfirmation);
         };
 
         const handlePaymentConfirmation = (e) => {
             e.preventDefault();
-            
+            const address = document.getElementById('delivery-address').value;
+            const phone = document.getElementById('contact-phone').value;
             const transactionId = document.getElementById('transaction-id').value;
             const message = document.getElementById('payment-message').value;
             
-            if (userCart.length === 0) {
-                document.getElementById('payment-modal').classList.remove('active');
-                return showToast('Cart is empty. Cannot place order.', 'error');
-            }
-
+            if (userCart.length === 0) { document.getElementById('payment-modal').classList.remove('active'); return showToast('Cart is empty.', 'error'); }
             document.getElementById('payment-modal').classList.remove('active');
             showLoader();
             
-            // 1. Place the order
-            placeOrder(transactionId, message);
+            // Use the global shippingCost variable which was updated by the radio buttons
+            placeOrder(transactionId, message, address, phone, shippingCost);
             
             setTimeout(() => {
-                hideLoader();
-                
-                // 2. Clear the cart (after order is recorded)
-                userCart = [];
-                saveCart();
-                updateBadges();
-                
-                // 3. Show success and redirect to orders page
-                showToast('Payment Successful! Your order has been placed.', 'success');
-                window.location.hash = '#orders';
+                hideLoader(); userCart = []; saveCart(); updateBadges(); showToast('Order placed successfully!', 'success');
+                if(confirm("Order placed! Would you like to chat with the admin about your order?")) { openChatModal(); } 
+                else { window.location.hash = '#orders'; }
             }, 1500);
         };
 
@@ -1397,43 +872,18 @@
             document.getElementById('theme-toggle').innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
         };
         
-        // --- SEARCH FUNCTIONALITY ---
         const handleSearch = (query) => {
             const resultsGrid = document.getElementById('search-results-grid');
             if (!resultsGrid) return;
-
-            if (query.length < 2) {
-                resultsGrid.innerHTML = `<div class="empty-state" style="grid-column: 1 / -1;"><i class="fas fa-search"></i><p>Enter at least 2 characters to search.</p></div>`;
-                return;
-            }
-
-            const lowerCaseQuery = query.toLowerCase();
-            const filteredProducts = products.filter(p => 
-                p.name.toLowerCase().includes(lowerCaseQuery)
-            );
-
-            if (filteredProducts.length === 0) {
-                resultsGrid.innerHTML = `<div class="empty-state" style="grid-column: 1 / -1;"><i class="fas fa-box-open"></i><p>No products match your search.</p></div>`;
-            } else {
-                renderProducts(filteredProducts, 'search-results-grid');
-            }
+            if (query.length < 2) { resultsGrid.innerHTML = `<div class="empty-state"><i class="fas fa-search"></i><p>Enter at least 2 chars.</p></div>`; return; }
+            const filtered = products.filter(p => p.name.toLowerCase().includes(query.toLowerCase()));
+            if (filtered.length === 0) { resultsGrid.innerHTML = `<div class="empty-state"><i class="fas fa-box-open"></i><p>No matches.</p></div>`; } 
+            else { renderProducts(filtered, 'search-results-grid'); }
         };
 
-
-        // --- INITIALIZATION & EVENT LISTENERS ---
         const init = async () => {
-            const savedTheme = localStorage.getItem('theme') || 'dark';
-            setTheme(savedTheme);
-
-            // Splash Screen timing remains the same
-            const splash = document.getElementById('splash-screen');
-            setTimeout(() => {
-                splash.style.opacity = '0';
-                setTimeout(() => {
-                    splash.style.display = 'none';
-                }, 500);
-            }, 2500);
-
+            setTheme(localStorage.getItem('theme') || 'dark');
+            setTimeout(() => { document.getElementById('splash-screen').style.opacity = '0'; setTimeout(() => { document.getElementById('splash-screen').style.display = 'none'; }, 500); }, 2500);
             setupEventListeners();
             await Promise.all([fetchProducts(), setupAuthListener()]);
             document.getElementById('store-view').style.display = 'block';
@@ -1442,82 +892,25 @@
 
         const setupEventListeners = () => {
             window.addEventListener('hashchange', handleRouteChange);
-
             document.body.addEventListener('click', async (e) => {
                 const target = e.target;
-                
-                // Theme Toggle 
-                if (target.closest('#theme-toggle')) {
-                    const currentTheme = localStorage.getItem('theme') || 'dark';
-                    setTheme(currentTheme === 'dark' ? 'light' : 'dark');
-                }
-                // Search Toggle
-                else if (target.closest('#open-search')) {
-                    e.preventDefault();
-                    document.getElementById('search-overlay').classList.add('active');
-                    document.getElementById('search-input').focus();
-                    handleSearch(''); 
-                }
-                else if (target.closest('#close-search')) {
-                    document.getElementById('search-overlay').classList.remove('active');
-                    document.getElementById('search-input').value = '';
-                    // Clear search results grid
-                    const searchResults = document.getElementById('search-results-grid');
-                    if (searchResults) searchResults.innerHTML = '';
-                }
-                // Profile Page Auth
-                else if (target.closest('#profile-login-btn')) {
-                    openAuthModal(false);
-                }
-                else if (target.closest('#profile-register-btn')) {
-                    openAuthModal(true);
-                }
-                // 🔥 NEW: Open Chat Modal
-                else if (target.closest('#message-admin-btn')) {
-                    openChatModal();
-                }
-                else if (target.closest('#profile-logout-btn')) {
-                    auth.signOut().then(() => {
-                        showToast('You have been logged out.');
-                        loadGuestData(); // Reload guest data after logout
-                        // Reload the current page to reflect changes
-                        window.location.hash = '#profile'; 
-                    });
-                }
-                // Product Actions
-                else if (target.closest('.add-to-cart-btn')) {
-                    const productId = target.closest('.add-to-cart-btn').dataset.id;
-                    addToCart(productId);
-                }
-                // Wishlist Toggle 
-                else if (target.closest('.wishlist-btn')) {
-                    const productId = target.closest('.wishlist-btn').dataset.id;
-                    toggleWishlist(productId);
-                }
-                // Cart Quantity Controls
-                else if (target.closest('.increase-qty')) {
-                    const productId = target.closest('.increase-qty').dataset.id;
-                    updateCartItemQuantity(productId, 1);
-                }
-                else if (target.closest('.decrease-qty')) {
-                    const productId = target.closest('.decrease-qty').dataset.id;
-                    updateCartItemQuantity(productId, -1);
-                }
-                else if (target.closest('.remove-item-btn')) {
-                    const productId = target.closest('.remove-item-btn').dataset.id;
-                    removeCartItem(productId);
-                }
+                if (target.closest('#theme-toggle')) { setTheme(document.body.classList.contains('dark-theme') ? 'light' : 'dark'); }
+                else if (target.closest('#open-search')) { e.preventDefault(); document.getElementById('search-overlay').classList.add('active'); document.getElementById('search-input').focus(); }
+                else if (target.closest('#close-search')) { document.getElementById('search-overlay').classList.remove('active'); document.getElementById('search-input').value = ''; document.getElementById('search-results-grid').innerHTML = ''; }
+                else if (target.closest('#profile-login-btn')) { openAuthModal(false); }
+                else if (target.closest('#profile-register-btn')) { openAuthModal(true); }
+                else if (target.closest('#message-admin-btn')) { openChatModal(); }
+                else if (target.closest('#profile-logout-btn')) { auth.signOut().then(() => { showToast('Logged out.'); loadGuestData(); window.location.hash = '#profile'; }); }
+                else if (target.closest('.add-to-cart-btn')) { addToCart(target.closest('.add-to-cart-btn').dataset.id); }
+                else if (target.closest('.wishlist-btn')) { toggleWishlist(target.closest('.wishlist-btn').dataset.id); }
+                else if (target.closest('.increase-qty')) { updateCartItemQuantity(target.closest('.increase-qty').dataset.id, 1); }
+                else if (target.closest('.decrease-qty')) { updateCartItemQuantity(target.closest('.decrease-qty').dataset.id, -1); }
+                else if (target.closest('.remove-item-btn')) { removeCartItem(target.closest('.remove-item-btn').dataset.id); }
             });
-
-            // Live Search Input Listener
-            document.getElementById('search-input')?.addEventListener('input', (e) => {
-                handleSearch(e.target.value.trim());
-            });
+            document.getElementById('search-input')?.addEventListener('input', (e) => handleSearch(e.target.value.trim()));
         };
 
-        // Start the application
         window.addEventListener('load', init);
-
     </script>
 </body>
 </html>
