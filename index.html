@@ -71,7 +71,7 @@
         .form-group { position: relative; margin-bottom: 1rem; }
         label { font-weight: 600; font-size: 0.9rem; display: block; margin-bottom: 0.3rem; color: var(--text-color); }
 
-        /* --- Radio Box Styles (New) --- */
+        /* --- Radio Box Styles --- */
         .radio-group { display: flex; gap: 10px; }
         .radio-box { 
             flex: 1; border: 1px solid var(--border-color); padding: 10px; border-radius: 8px; 
@@ -314,15 +314,14 @@
         // 🔥🔥🔥 PASTE YOUR FIREBASE CONFIGURATION CODE HERE 🔥🔥🔥
         // =================================================================
         const firebaseConfig = {
-          apiKey: "AIzaSyDejfoaQpaNJ-XDpVopn1nEDl-RWseEBiQ",
-          authDomain: "e-commerce-app-e1d9e.firebaseapp.com",
-          databaseURL: "https://e-commerce-app-e1d9e-default-rtdb.firebaseio.com",
-          projectId: "e-commerce-app-e1d9e",
-          storageBucket: "e-commerce-app-e1d9e.firebasestorage.app",
-          messagingSenderId: "203220920862",
-          appId: "1:203220920862:web:3cfdf5bf300c119dfc5c0f",
-          measurementId: "G-D43W7XSYQR"
-        };
+  apiKey: "AIzaSyAKq38PbC6oFRHnyaDSJ1yOWRMZz9wW5tE",
+  authDomain: "subhashree-97568.firebaseapp.com",
+  databaseURL: "https://subhashree-97568-default-rtdb.firebaseio.com",
+  projectId: "subhashree-97568",
+  storageBucket: "subhashree-97568.firebasestorage.app",
+  messagingSenderId: "781266473492",
+  appId: "1:781266473492:web:48c1dc483c0a5b5f5b0d01"
+};
         // =================================================================
 
         const app = firebase.initializeApp(firebaseConfig);
@@ -736,7 +735,14 @@
                 const message = snapshot.val();
                 const messageEl = document.createElement('div');
                 messageEl.classList.add('chat-message', message.sender);
-                messageEl.innerHTML = `<span>${message.text}</span><span class="timestamp">${new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>`;
+                
+                // 🔥 FIX: Show Label "ShopNepal Support" if message is from Admin
+                let senderLabel = '';
+                if(message.sender === 'admin') {
+                    senderLabel = `<div style="font-size:0.75rem; font-weight:700; margin-bottom:2px; color:var(--text-color); opacity:0.8;">ShopNepal Support</div>`;
+                }
+
+                messageEl.innerHTML = `${senderLabel}<span>${message.text}</span><span class="timestamp">${new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>`;
                 messagesContainer.appendChild(messageEl);
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
             });
